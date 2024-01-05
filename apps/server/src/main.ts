@@ -1,12 +1,12 @@
-import express from 'express';
-import * as path from 'path';
-import fetch from 'node-fetch';
-import { JustJoinItResponse } from './model/jjit';
-import { NoFluffJobsResponse } from './model/nofluffjobs';
-import { Datastore } from 'nedb-async-await';
-import { jjitMapper } from './util/jjit-mapper';
 import { Offer } from '@job-board/api-interfaces';
 import cors from 'cors';
+import express from 'express';
+import { Datastore } from 'nedb-async-await';
+import fetch from 'node-fetch';
+import * as path from 'path';
+import { JustJoinItResponse } from './model/jjit';
+import { NoFluffJobsResponse } from './model/nofluffjobs';
+import { jjitMapper } from './util/jjit-mapper';
 
 const offers = Datastore({
   filename: path.resolve(path.dirname(''), './database/offers.db'),
@@ -83,3 +83,10 @@ const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
 });
 server.on('error', console.error);
+
+// serve static app
+app.use('/', express.static(path.resolve(__dirname, './../client-react')));
+
+app.get('*', (_, res) => {
+  res.sendFile(path.resolve(__dirname, './../client-react/index.html'));
+});

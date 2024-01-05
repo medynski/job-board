@@ -2,15 +2,16 @@ import { Offer } from '@job-board/api-interfaces';
 import axios from 'axios';
 import { Fragment, useEffect, useState } from 'react';
 import { OfferBox } from './offer-box';
+import { Query } from './query';
+import { apiUrl } from './utils/api-url';
 
 export const App = () => {
   const [data, setData] = useState<Offer[]>([]);
 
   useEffect(() => {
     axios
-      .get<Offer[]>('http://localhost:3333/offers')
+      .get<Offer[]>(`${apiUrl()}/offers`)
       .then((response) => {
-        console.log(response.data);
         setData(response.data);
       })
       .catch((error) => {
@@ -23,9 +24,11 @@ export const App = () => {
 
   return (
     <Fragment>
-      {data.map((offer) => (
-        <OfferBox offer={offer} />
+      {data.map((offer, index) => (
+        <OfferBox offer={offer} key={index} />
       ))}
+
+      <Query />
     </Fragment>
   );
 };
