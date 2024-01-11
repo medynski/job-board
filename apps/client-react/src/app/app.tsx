@@ -1,35 +1,35 @@
 import { Offer } from '@job-board/api-interfaces';
 import axios from 'axios';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { OfferBox } from './offer-box';
 import { Query } from './query';
 import { apiUrl } from './utils/api-url';
 
 export const App = () => {
-  const [data, setData] = useState<Offer[]>([]);
+  const [offers, setOffers] = useState<Offer[]>([]);
 
   useEffect(() => {
-    axios
-      .get<Offer[]>(`${apiUrl()}/offers`)
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get<Offer[]>(`${apiUrl()}/offers`);
+        setOffers(response.data);
+      } catch (error) {
         console.log(error);
-      })
-      .finally(() => {
-        // always executed
-      });
+      } finally {
+        console.log('finally');
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
-    <Fragment>
-      {data.map((offer, index) => (
+    <>
+      {offers.map((offer, index) => (
         <OfferBox offer={offer} key={index} />
       ))}
-
       <Query />
-    </Fragment>
+    </>
   );
 };
 
