@@ -62,7 +62,7 @@ app.get('/offers', async (req, res) => {
 
 app.get('/fetch-jjit', async (req, res) => {
   const response = await fetch(
-    'https://justjoin.it/_next/data/_sRXau1nzJGS7UECH40LC/all-locations/javascript.json?slug=all-locations&slug=javascript'
+    'https://justjoin.it/_next/data/RfUNahOfhjbsBzf1smFoS/all-locations/javascript/remote_yes/with-salary_yes.json?slug=all-locations&slug=javascript&slug=remote_yes&slug=with-salary_yes'
   );
   const body = (await response.json()) as JustJoinItResponse;
   const offersData = await offers.find({});

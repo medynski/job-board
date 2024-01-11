@@ -1,6 +1,5 @@
+import { Offer, Origin } from '@job-board/api-interfaces';
 import { JjitOffer, JustJoinItResponse } from '../model/jjit';
-import { Offer } from '../../../../libs/api-interfaces/src/lib/models/offer';
-import { Origin } from '../../../../libs/api-interfaces/src/lib/models/origin';
 
 export function jjitMapper(data: JustJoinItResponse): Offer[] {
   try {
@@ -9,7 +8,7 @@ export function jjitMapper(data: JustJoinItResponse): Offer[] {
         return {
           uniqId: offer.slug,
           title: offer.title,
-          createdAt: offer.publishedAt,
+          createdAt: new Date(offer.publishedAt).getTime(),
           companyName: offer.companyName,
           salaryRange: {
             from: offer.employmentTypes[0].from,

@@ -45,9 +45,11 @@ export const App = () => {
 
   return (
     <MainWrapper>
-      {offers.map((offer: Offer, index: number) => (
-        <OfferBox offer={offer} key={index} />
-      ))}
+      {offers
+        .sort((a: Offer, b: Offer) => b.createdAt - a.createdAt)
+        .map((offer: Offer, index: number) => (
+          <OfferBox offer={offer} key={index} />
+        ))}
 
       <div
         css={css`
