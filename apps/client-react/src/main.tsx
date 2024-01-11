@@ -4,6 +4,7 @@ import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
+import { Global, css } from '@emotion/react';
 import App from './app/app';
 
 const root = ReactDOM.createRoot(
@@ -14,6 +15,20 @@ const queryClient = new QueryClient();
 
 root.render(
   <StrictMode>
+    <Global
+      styles={css`
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400,600&display=swap');
+
+        * {
+          font-family: 'Roboto', sans-serif;
+          color: #222;
+        }
+
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+      `}
+    />
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <App />

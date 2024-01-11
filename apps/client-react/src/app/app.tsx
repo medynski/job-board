@@ -1,25 +1,23 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useFetchOffers } from './hooks/useFetchOffers';
 import { OfferBox } from './offer-box';
 import { apiUrl } from './utils/api-url';
 
 const MainWrapper = styled.div`
-  width: 50%;
+  width: 70%;
   margin: 0 auto;
 `;
 
 const Divider = styled.div`
-  width: 50%;
+  width: 70%;
   margin: 20px auto;
   background-color: #000;
   height: 10px;
 `;
 
 export const App = () => {
-  const { offers: o } = useFetchOffers();
-
   const queryClient = useQueryClient();
 
   const {
@@ -50,13 +48,18 @@ export const App = () => {
       {offers.map((offer: Offer, index: number) => (
         <OfferBox offer={offer} key={index} />
       ))}
-      <Divider />
-      {o.map((offer: Offer, index: number) => (
-        <OfferBox offer={offer} key={index} />
-      ))}
-      <button onClick={async () => addOffer({ title: 'New offer' })}>
-        Add new offer
-      </button>
+
+      <div
+        css={css`
+          display: none;
+        `}
+      >
+        <Divider />
+
+        <button onClick={async () => addOffer({ title: 'New offer' })}>
+          Add new offer
+        </button>
+      </div>
     </MainWrapper>
   );
 };
