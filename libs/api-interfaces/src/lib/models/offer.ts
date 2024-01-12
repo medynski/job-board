@@ -1,3 +1,4 @@
+import { Nullable } from './nullable';
 import { Origin } from './origin';
 
 export interface Offer {
@@ -13,4 +14,6 @@ export interface Offer {
   requiredSkills: string[];
   seniority: string[];
   origin: Origin;
+  currency: string;
+  companyLogoUrl: Nullable<string>;
 }

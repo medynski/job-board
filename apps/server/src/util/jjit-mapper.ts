@@ -4,7 +4,7 @@ import { JjitOffer, JustJoinItResponse } from '../model/jjit';
 export function jjitMapper(data: JustJoinItResponse): Offer[] {
   try {
     return data.pageProps.dehydratedState.queries[0].state.data.pages[0].data.map(
-      (offer: JjitOffer) => {
+      (offer: JjitOffer): Offer => {
         return {
           uniqId: offer.slug,
           title: offer.title,
@@ -18,6 +18,8 @@ export function jjitMapper(data: JustJoinItResponse): Offer[] {
           requiredSkills: offer.requiredSkills,
           origin: Origin.JJIT,
           seniority: [offer.experienceLevel],
+          companyLogoUrl: offer.companyLogoThumbUrl,
+          currency: offer.employmentTypes[0].currency,
         };
       }
     );
