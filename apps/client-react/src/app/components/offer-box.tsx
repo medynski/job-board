@@ -2,8 +2,8 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
 import { FunctionComponent } from 'react';
-import { currency } from './utils/currency';
-import { date } from './utils/date';
+import { currency } from '../utils/currency';
+import { date } from '../utils/date';
 
 const Box = styled.div`
   border: 1px solid #000;
@@ -30,7 +30,7 @@ export const OfferBox: FunctionComponent<{ offer: Offer }> = (props) => {
             margin-left: 5px;
             position: relative;
             top: -2px;
-            color: blue;
+            color: #4e71da;
             text-decoration: none;
 
             &:hover {
@@ -42,7 +42,7 @@ export const OfferBox: FunctionComponent<{ offer: Offer }> = (props) => {
           target="_blank"
           rel="noreferrer"
         >
-          link
+          open_in_new
         </a>
       </div>
       <div

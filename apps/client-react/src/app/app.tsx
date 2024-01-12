@@ -2,7 +2,8 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { OfferBox } from './offer-box';
+import { Header } from './components/header';
+import { OfferBox } from './components/offer-box';
 import { apiUrl } from './utils/api-url';
 
 const MainWrapper = styled.div`
@@ -26,7 +27,12 @@ export const App = () => {
     data: offers,
   } = useQuery({
     queryKey: ['offers'],
-    queryFn: () => fetch(`${apiUrl()}/offers`).then((res) => res.json()),
+    queryFn: () =>
+      fetch(`${apiUrl()}/offers`)
+        .then((res) => res.json())
+        .then((offers: Offer[]) =>
+          offers.sort((a: Offer, b: Offer) => b.createdAt - a.createdAt)
+        ),
   });
 
   const { mutateAsync: addOffer } = useMutation({
@@ -45,11 +51,11 @@ export const App = () => {
 
   return (
     <MainWrapper>
-      {offers
-        .sort((a: Offer, b: Offer) => b.createdAt - a.createdAt)
-        .map((offer: Offer, index: number) => (
-          <OfferBox offer={offer} key={index} />
-        ))}
+      <Header />
+
+      {offers.map((offer: Offer, index: number) => (
+        <OfferBox offer={offer} key={index} />
+      ))}
 
       <div
         css={css`
