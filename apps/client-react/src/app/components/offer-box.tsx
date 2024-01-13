@@ -15,11 +15,11 @@ const Box = styled.div`
   display: flex;
 `;
 
-export const OfferBox: FunctionComponent<{ offer: Offer }> = (props) => {
+export const OfferBox: FunctionComponent<{ offer: Offer }> = ({ offer }) => {
   return (
     <Box>
       <section>
-        <CompanyLogo companyLogoUrl={props.offer.companyLogoUrl} />
+        <CompanyLogo companyLogoUrl={offer.companyLogoUrl} />
       </section>
       <section>
         <div
@@ -29,7 +29,7 @@ export const OfferBox: FunctionComponent<{ offer: Offer }> = (props) => {
             display: flex;
           `}
         >
-          <div>{props.offer.title}</div>
+          <div>{offer.title}</div>
           <a
             className="material-symbols-outlined"
             css={css`
@@ -44,7 +44,7 @@ export const OfferBox: FunctionComponent<{ offer: Offer }> = (props) => {
                 opacity: 0.5;
               }
             `}
-            href={props.offer.url}
+            href={offer.url}
             target="_blank"
             rel="noreferrer"
           >
@@ -58,7 +58,7 @@ export const OfferBox: FunctionComponent<{ offer: Offer }> = (props) => {
             color: #383838;
           `}
         >
-          {props.offer.companyName}
+          {offer.companyName}
         </div>
 
         <div
@@ -66,11 +66,11 @@ export const OfferBox: FunctionComponent<{ offer: Offer }> = (props) => {
             font-size: 12px;
           `}
           dangerouslySetInnerHTML={{
-            __html: props.offer.requiredSkills.join(' &#8226; '),
+            __html: offer.requiredSkills.join(' &#8226; '),
           }}
         ></div>
 
-        {props.offer.salaryRange.from && props.offer.salaryRange.to && (
+        {offer.salaryRange.from && offer.salaryRange.to && (
           <div
             css={css`
               font-size: 12px;
@@ -83,14 +83,14 @@ export const OfferBox: FunctionComponent<{ offer: Offer }> = (props) => {
               font-weight: bold;
             `}
           >
-            {currency(props.offer.salaryRange.from)} -{' '}
-            {currency(props.offer.salaryRange.to)}{' '}
+            {currency(offer.salaryRange.from)} -{' '}
+            {currency(offer.salaryRange.to)}{' '}
             <span
               css={css`
                 font-size: 8px;
               `}
             >
-              {props.offer.currency}
+              {offer.currency}
             </span>
           </div>
         )}
@@ -108,7 +108,7 @@ export const OfferBox: FunctionComponent<{ offer: Offer }> = (props) => {
             color: #fff;
           `}
         >
-          {date(props.offer.createdAt)}
+          {date(offer.createdAt)}
         </div>
       </section>
     </Box>
