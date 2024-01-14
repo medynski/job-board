@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { TestWrapper } from './__tests/test-wrapper';
 import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
 import { apiUrl } from './utils/api-url';
@@ -45,7 +44,6 @@ export const App = () => {
 
   return (
     <MainWrapper>
-      <TestWrapper />
       <Header />
 
       {offers.map((offer: Offer, index: number) => (

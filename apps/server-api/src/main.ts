@@ -1,5 +1,7 @@
 import cors from '@fastify/cors';
+import fastifyStatic from '@fastify/static';
 import Fastify from 'fastify';
+import path from 'path';
 import { app } from './app/app';
 
 const host = process.env.HOST ?? 'localhost';
@@ -10,6 +12,12 @@ const server = Fastify({
   logger: true,
 });
 server.register(cors, {});
+
+// serve static app
+server.register(fastifyStatic, {
+  root: path.resolve(__dirname, './../../../../client-react'),
+});
+
 server.register(app);
 
 // Start listening.

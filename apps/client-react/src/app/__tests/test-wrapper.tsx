@@ -6,7 +6,7 @@ export const TestWrapper = () => {
   return (
     <div
       css={css`
-        display: none;
+        display: block;
       `}
     >
       <Counter />
