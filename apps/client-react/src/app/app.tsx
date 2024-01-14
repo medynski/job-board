@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { TestWrapper } from './__tests/test-wrapper';
 import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
 import { apiUrl } from './utils/api-url';
@@ -9,13 +10,6 @@ import { apiUrl } from './utils/api-url';
 const MainWrapper = styled.div`
   width: 70%;
   margin: 0 auto;
-`;
-
-const Divider = styled.div`
-  width: 70%;
-  margin: 20px auto;
-  background-color: #000;
-  height: 10px;
 `;
 
 export const App = () => {
@@ -51,6 +45,7 @@ export const App = () => {
 
   return (
     <MainWrapper>
+      <TestWrapper />
       <Header />
 
       {offers.map((offer: Offer, index: number) => (
@@ -62,8 +57,6 @@ export const App = () => {
           display: none;
         `}
       >
-        <Divider />
-
         <button onClick={async () => addOffer({ title: 'New offer' })}>
           Add new offer
         </button>
