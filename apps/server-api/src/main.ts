@@ -15,7 +15,7 @@ server.register(cors, {});
 
 // serve static app
 server.register(fastifyStatic, {
-  root: path.resolve(__dirname, './../../../../client-react'),
+  root: path.resolve(path.dirname(''), './dist/apps/client-react'),
 });
 
 server.register(app);

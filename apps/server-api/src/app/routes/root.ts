@@ -5,7 +5,7 @@ export default async function (fastify: FastifyInstance) {
   fastify.get('/', async (req, reply) => {
     return reply.sendFile(
       'index.html',
-      path.resolve(__dirname, './../../../../../../client-react')
+      path.resolve(path.dirname(''), './dist/apps/client-react')
     );
   });
 }
