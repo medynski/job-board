@@ -51,20 +51,48 @@ export default async function (fastify: FastifyInstance) {
       response: {
         201: OfferSchema,
       },
+      body: {
+        type: 'object',
+        required: ['title'],
+        properties: {
+          title: { type: 'string' },
+        },
+      },
     },
     handler: async (req: FastifyRequest, rep: FastifyReply) => {
       const offer = req.body;
       console.warn(offer);
 
       const response = await getFirstOffer();
-      rep.send(response);
+      rep.code(201).send(response);
+    },
+  });
+
+  fastify.put('/offers', {
+    schema: {
+      response: {
+        201: OfferSchema,
+      },
+      body: OfferSchema,
+    },
+    handler: async (req: FastifyRequest, rep: FastifyReply) => {
+      const offer = req.body;
+      console.warn(offer);
+
+      const response = await getFirstOffer();
+      rep.code(201).send(response);
     },
   });
 
   fastify.delete('/offers/:id', {
     schema: {
       response: {
-        201: OfferSchema,
+        200: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+          },
+        },
       },
     },
     handler: async (
@@ -75,8 +103,7 @@ export default async function (fastify: FastifyInstance) {
       const offer = req.body;
       console.warn(offer, id);
 
-      const response = await getFirstOffer();
-      rep.send(response);
+      rep.send('The offer has been deleted.');
     },
   });
 }
