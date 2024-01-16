@@ -1,5 +1,5 @@
 import { Offer, Origin } from '@job-board/api-interfaces';
-import { JjitOffer, JustJoinItResponse } from '../model/jjit';
+import { JjitOffer, JustJoinItResponse } from '../models/jjit';
 
 export function jjitMapper(data: JustJoinItResponse): Offer[] {
   try {

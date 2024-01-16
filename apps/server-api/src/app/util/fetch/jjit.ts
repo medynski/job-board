@@ -1,6 +1,6 @@
 import { Offer } from '@job-board/api-interfaces';
-import { JustJoinItResponse } from '../../model/jjit';
-import { offers } from '../db';
+import { addOffer, getAllOffers } from '../../db/offer';
+import { JustJoinItResponse } from '../../models/jjit';
 import { jjitMapper } from '../jjit-mapper';
 
 export const fetchJJIT = async (
@@ -8,13 +8,13 @@ export const fetchJJIT = async (
 ) => {
   const response = await fetch(url);
   const body = (await response.json()) as JustJoinItResponse;
-  const offersData = await offers.find({});
+  const offersData = await getAllOffers();
   const mappedOffers = jjitMapper(body);
   const offersIds: string[] = offersData.map((o: Offer) => o.uniqId);
   mappedOffers
     .filter((offer) => !offersIds.includes(offer.uniqId))
     .forEach(async (offer) => {
-      await offers.insert(offer);
+      await addOffer(offer);
     });
 
   // console.log(body.pageProps.dehydratedState.queries[0].state.data.pages[0].data);

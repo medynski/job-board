@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { offers } from '../../util/db';
+import { getAllOffers } from '../../db/offer';
 
 const OfferSchema = {
   type: 'object',
@@ -26,7 +26,7 @@ const OfferSchema = {
 };
 
 const getFirstOffer = async () => {
-  const offersData = await offers.find({});
+  const offersData = await getAllOffers();
   return offersData[0];
 };
 
@@ -41,7 +41,7 @@ export default async function (fastify: FastifyInstance) {
       },
     },
     handler: async (_, rep: FastifyReply) => {
-      const offersData = await offers.find({});
+      const offersData = await getAllOffers();
       rep.send(offersData);
     },
   });

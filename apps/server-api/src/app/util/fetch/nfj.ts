@@ -1,4 +1,4 @@
-import { NoFluffJobsResponse } from '../../model/nofluffjobs';
+import { NoFluffJobsResponse } from '../../models/nofluffjobs';
 
 export const fetchNFJ = async (
   url: string = 'https://nofluffjobs.com/api/search/posting?pageFrom=1&pageTo=1&pageSize=100&salaryCurrency=PLN&salaryPeriod=month&region=pl'
