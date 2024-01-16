@@ -16,4 +16,5 @@ export interface Offer {
   origin: Origin;
   currency: string;
   companyLogoUrl: Nullable<string>;
+  _id?: string;
 }

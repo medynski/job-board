@@ -1,34 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { getAllOffers } from '../../db/offer';
-
-const OfferSchema = {
-  type: 'object',
-  properties: {
-    uniqId: { type: 'string' },
-    title: { type: 'string' },
-    createdAt: { type: 'number' },
-    companyName: { type: 'string' },
-    salaryRange: {
-      type: 'object',
-      properties: {
-        from: { type: 'number' },
-        to: { type: 'number' },
-      },
-    },
-    url: { type: 'string' },
-    requiredSkills: { type: 'array', items: { type: 'string' } },
-    origin: { type: 'string' },
-    seniority: { type: 'array', items: { type: 'string' } },
-    companyLogoUrl: { type: 'string' },
-    currency: { type: 'string' },
-    _id: { type: 'string' },
-  },
-};
-
-const getFirstOffer = async () => {
-  const offersData = await getAllOffers();
-  return offersData[0];
-};
+import { getAllOffers, getFirstOffer } from '../../db/offer';
+import { OfferSchema } from '../../schemas/offer-schema';
 
 export default async function (fastify: FastifyInstance) {
   fastify.get('/offers', {
