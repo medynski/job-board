@@ -1,35 +1,33 @@
 import { Offer } from '@job-board/api-interfaces';
-import { Datastore } from 'nedb-async-await';
-import path from 'path';
+import { Collection, Db } from 'mongodb';
 
-const offersCollection = Datastore({
-  filename: path.resolve(path.dirname(''), './database/offers.db'),
-  autoload: true,
-});
+const getCollection = async (db: Db): Promise<Collection<Offer>> => {
+  return db.collection('offers');
+};
 
-export const getAllOffers = async (): Promise<Offer[]> => {
-  const offersData = await offersCollection.find({});
+export const getAllOffers = async (db: Db): Promise<Offer[]> => {
+  const offersCollection = await getCollection(db);
+  const offersData = await offersCollection.find({}).toArray();
   return offersData;
 };
 
-export const getOffer = async (id: string): Promise<Offer> => {
+export const getOffer = async (db: Db, id: string): Promise<Offer> => {
+  const offersCollection = await getCollection(db);
   const offer = await offersCollection.findOne({ _id: id });
   return offer;
 };
 
-export const getFirstOffer = async (): Promise<Offer> => {
-  const offer = await offersCollection.findOne({});
-  return offer;
+export const addOffer = async (db: Db, offer: Offer): Promise<void> => {
+  const offersCollection = await getCollection(db);
+  await offersCollection.insertOne(offer);
 };
 
-export const addOffer = async (offer: Offer): Promise<void> => {
-  await offersCollection.insert(offer);
+export const updateOffer = async (db: Db, offer: Offer): Promise<void> => {
+  const offersCollection = await getCollection(db);
+  await offersCollection.updateOne({ _id: offer._id }, offer);
 };
 
-export const updateOffer = async (offer: Offer): Promise<void> => {
-  await offersCollection.update({ _id: offer._id }, offer);
-};
-
-export const deleteOffer = async (id: string): Promise<void> => {
-  await offersCollection.remove({ _id: id });
+export const deleteOffer = async (db: Db, id: string): Promise<void> => {
+  const offersCollection = await getCollection(db);
+  await offersCollection.deleteOne({ _id: id });
 };

@@ -9,12 +9,12 @@ const getFetchNFJ = async (_: FastifyRequest, reply: FastifyReply) => {
 };
 
 const getFetchJJIT = async (_: FastifyRequest, reply: FastifyReply) => {
-  await fetchJJIT();
+  await fetchJJIT(_.db);
   reply.send('DB updated.');
 };
 
 const getExchangeRates = async (_: FastifyRequest, reply: FastifyReply) => {
-  await fetchExchangeRates();
+  await fetchExchangeRates(_.db);
   reply.send('DB updated.');
 };
 

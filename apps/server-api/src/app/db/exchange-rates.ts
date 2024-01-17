@@ -1,26 +1,28 @@
 import { CurrencyResponse } from '@job-board/api-interfaces';
-import { Datastore } from 'nedb-async-await';
-import path from 'path';
+import { Collection, Db, WithId } from 'mongodb';
 
-const exchangeRatesCollection = Datastore({
-  filename: path.resolve(path.dirname(''), './database/exchange-rates.db'),
-  autoload: true,
-});
+const getCollection = async (db: Db): Promise<Collection<CurrencyResponse>> => {
+  return db.collection('offers');
+};
 
-export const getCurrentExchangeRates = async (): Promise<
-  CurrencyResponse[]
-> => {
-  //   const entryData = await exchangeRatesCollection
-  //     .find()
-  //     .sort({ timestamp: -1 })
-  //     .limit(1);
+export const getCurrentExchangeRates = async (
+  db: Db
+): Promise<WithId<CurrencyResponse>> => {
+  const exchangeRatesCollection = await getCollection(db);
 
-  const entryData = await exchangeRatesCollection.find({});
-  return entryData.reverse()[0];
+  const entryData = await exchangeRatesCollection
+    .find()
+    .sort({ timestamp: -1 })
+    .limit(1)
+    .toArray();
+
+  return entryData[0];
 };
 
 export const addExchangeRates = async (
+  db: Db,
   entry: CurrencyResponse
 ): Promise<void> => {
-  await exchangeRatesCollection.insert(entry);
+  const exchangeRatesCollection = await getCollection(db);
+  await exchangeRatesCollection.insertOne(entry);
 };

@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { getCurrentExchangeRates } from '../db/exchange-rates';
-import { getAllOffers, getFirstOffer } from '../db/offer';
+import { getAllOffers } from '../db/offer';
 import { OfferSchema } from '../schemas/offer-schema';
 
 const getOffers = {
@@ -12,10 +12,11 @@ const getOffers = {
       },
     },
   },
-  handler: async (_, rep: FastifyReply) => {
-    const offersData = await getAllOffers();
-    const exchangeRates = await getCurrentExchangeRates();
-    console.warn({ exchangeRates });
+  handler: async (req: FastifyRequest, rep: FastifyReply) => {
+    const offersData = await getAllOffers(req.db);
+    const exchangeRates = await getCurrentExchangeRates(req.db);
+
+    console.log({ exchangeRates });
     rep.send(offersData);
   },
 };
@@ -37,8 +38,8 @@ const postOffers = {
     const offer = req.body;
     console.warn(offer);
 
-    const response = await getFirstOffer();
-    rep.code(201).send(response);
+    const response = await getAllOffers(req.db);
+    rep.code(201).send(response[0]);
   },
 };
 
@@ -53,8 +54,8 @@ const putOffers = {
     const offer = req.body;
     console.warn(offer);
 
-    const response = await getFirstOffer();
-    rep.code(201).send(response);
+    const response = await getAllOffers(req.db);
+    rep.code(201).send(response[0]);
   },
 };
 

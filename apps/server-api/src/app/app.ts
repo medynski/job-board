@@ -7,6 +7,10 @@ export interface AppOptions {}
 
 export async function app(fastify: FastifyInstance, opts: AppOptions) {
   // Place here your custom code!
+  fastify.decorateRequest('db', null);
+  fastify.addHook('onRequest', async (req) => {
+    req.db = fastify.mongo.db;
+  });
 
   // Do not touch the following lines
 
