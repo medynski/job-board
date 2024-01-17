@@ -1,11 +1,13 @@
-import { Offer } from '@job-board/api-interfaces';
+import {
+  JustJoinItResponse,
+  NoFluffJobsResponse,
+  Offer,
+} from '@job-board/api-interfaces';
 import cors from 'cors';
 import express from 'express';
 import { Datastore } from 'nedb-async-await';
 import fetch from 'node-fetch';
 import * as path from 'path';
-import { JustJoinItResponse } from './model/jjit';
-import { NoFluffJobsResponse } from './model/nofluffjobs';
 import { jjitMapper } from './util/jjit-mapper';
 
 const offers = Datastore({

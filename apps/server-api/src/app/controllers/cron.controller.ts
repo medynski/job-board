@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { fetchExchangeRates } from '../util/fetch/exchange-rates';
 import { fetchJJIT } from '../util/fetch/jjit';
 import { fetchNFJ } from '../util/fetch/nfj';
 
@@ -12,7 +13,13 @@ const getFetchJJIT = async (_: FastifyRequest, reply: FastifyReply) => {
   reply.send('DB updated.');
 };
 
+const getExchangeRates = async (_: FastifyRequest, reply: FastifyReply) => {
+  await fetchExchangeRates();
+  reply.send('DB updated.');
+};
+
 export default {
   getFetchNFJ,
   getFetchJJIT,
+  getExchangeRates,
 };
