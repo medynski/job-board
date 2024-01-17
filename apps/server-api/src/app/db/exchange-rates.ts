@@ -2,7 +2,7 @@ import { CurrencyResponse } from '@job-board/api-interfaces';
 import { Collection, Db, WithId } from 'mongodb';
 
 const getCollection = async (db: Db): Promise<Collection<CurrencyResponse>> => {
-  return db.collection('offers');
+  return db.collection('exchange-rates');
 };
 
 export const getCurrentExchangeRates = async (
