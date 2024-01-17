@@ -1,7 +1,7 @@
 import { Nullable } from './nullable';
 import { Origin } from './origin';
 
-export interface Offer {
+export type Offer = {
   uniqId: string;
   title: string;
   createdAt: number;
@@ -17,4 +17,4 @@ export interface Offer {
   currency: string;
   companyLogoUrl: Nullable<string>;
   _id?: string;
-}
+};

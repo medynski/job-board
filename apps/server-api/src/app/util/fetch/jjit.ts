@@ -1,6 +1,5 @@
-import { Offer } from '@job-board/api-interfaces';
+import { JustJoinItResponse, Offer } from '@job-board/api-interfaces';
 import { addOffer, getAllOffers } from '../../db/offer';
-import { JustJoinItResponse } from '../../models/jjit';
 import { jjitMapper } from '../jjit-mapper';
 
 export const fetchJJIT = async (
