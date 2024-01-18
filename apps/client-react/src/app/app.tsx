@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
 import { apiUrl } from './utils/api-url';
@@ -15,17 +16,22 @@ export const App = () => {
   const queryClient = useQueryClient();
 
   const {
-    isPending,
-    error,
+    isPending: isOffersRequestPending,
+    error: offersError,
     data: offers,
   } = useQuery({
     queryKey: ['offers'],
+    queryFn: () => axios.get(`${apiUrl()}/offers`).then((res) => res.data),
+  });
+
+  const {
+    isPending: isExchangeRatesRequestPending,
+    error: exchangeRatesError,
+    data: exchangeRates,
+  } = useQuery({
+    queryKey: ['exchangeRates'],
     queryFn: () =>
-      fetch(`${apiUrl()}/offers`)
-        .then((res) => res.json())
-        .then((offers: Offer[]) =>
-          offers.sort((a: Offer, b: Offer) => b.createdAt - a.createdAt)
-        ),
+      axios.get(`${apiUrl()}/exchange-rates`).then((res) => res.data),
   });
 
   const { mutateAsync: addOffer } = useMutation({
@@ -38,9 +44,16 @@ export const App = () => {
     },
   });
 
-  if (isPending) return 'Loading...';
+  if (isOffersRequestPending || isExchangeRatesRequestPending)
+    return 'Loading...';
 
-  if (error) return 'An error has occurred: ' + error.message;
+  if (offersError || exchangeRatesError)
+    return (
+      'An error has occurred: ' + offersError?.message ||
+      exchangeRatesError?.message
+    );
+
+  console.log({ exchangeRates });
 
   return (
     <MainWrapper>

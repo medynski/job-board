@@ -7,7 +7,10 @@ const getCollection = async (db: Db): Promise<Collection<Offer>> => {
 
 export const getAllOffers = async (db: Db): Promise<Offer[]> => {
   const offersCollection = await getCollection(db);
-  const offersData = await offersCollection.find({}).toArray();
+  const offersData = await offersCollection
+    .find({})
+    .sort({ createdAt: -1 })
+    .toArray();
   return offersData;
 };
 
