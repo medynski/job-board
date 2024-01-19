@@ -10,7 +10,6 @@ const getExchangeRates = {
   },
   handler: async (req: FastifyRequest, rep: FastifyReply) => {
     const exchangeRates = await getCurrentExchangeRates(req.db);
-    console.warn(exchangeRates);
     rep.send(exchangeRates);
   },
 };

@@ -10,6 +10,7 @@ export const ExchangeRatesSchema = {
       properties: {
         PLN: { type: 'number' },
         USD: { type: 'number' },
+        GBP: { type: 'number' },
       },
     },
     _id: { type: 'string' },

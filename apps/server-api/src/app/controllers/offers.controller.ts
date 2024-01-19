@@ -1,5 +1,4 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { getCurrentExchangeRates } from '../db/exchange-rates';
 import { getAllOffers } from '../db/offer';
 import { OfferSchema } from '../schemas/offer-schema';
 
@@ -14,9 +13,6 @@ const getOffers = {
   },
   handler: async (req: FastifyRequest, rep: FastifyReply) => {
     const offersData = await getAllOffers(req.db);
-    const exchangeRates = await getCurrentExchangeRates(req.db);
-
-    console.log({ exchangeRates });
     rep.send(offersData);
   },
 };
