@@ -3,7 +3,8 @@ import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { useState } from 'react';
+import { FunctionComponent } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
 import { apiUrl } from './utils/api-url';
@@ -15,9 +16,13 @@ const MainWrapper = styled.div`
 
 const pageSize = 10;
 
-export const App = () => {
+export const App: FunctionComponent = () => {
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const page = parseInt(queryParams.get('page') || '1', 10);
 
   const [offersQuery, exchangeRatesQuery] = useQueries({
     queries: [
@@ -76,12 +81,9 @@ export const App = () => {
       </div>
 
       <nav>
-        <button
-          onClick={() => setPage(Math.max(page - 1, 1))}
-          disabled={page === 1}
-        >
+        <Link to={page === 1 ? '#' : `/?page=${Math.max(page - 1, 1)}`}>
           Previous
-        </button>
+        </Link>
         <span
           css={css`
             display: inline-block;
@@ -91,14 +93,18 @@ export const App = () => {
         >
           {page}
         </span>
-        <button
-          onClick={() =>
-            setPage(Math.min(page + 1, offersQuery.data.pages.totalPages))
+        <Link
+          to={
+            page === offersQuery.data.pages.totalPages
+              ? '#'
+              : `/?page=${Math.min(
+                  page + 1,
+                  offersQuery.data.pages.totalPages
+                )}`
           }
-          disabled={page === offersQuery.data.pages.totalPages}
         >
           Next
-        </button>
+        </Link>
       </nav>
     </MainWrapper>
   );

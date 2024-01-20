@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './app';
 
 describe('App', () => {
@@ -10,7 +10,9 @@ describe('App', () => {
     const { baseElement } = render(
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
-          <App />
+          <Routes>
+            <Route path="/" element={<App />} />
+          </Routes>
         </QueryClientProvider>
       </BrowserRouter>
     );

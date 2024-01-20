@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { Global, css } from '@emotion/react';
 import App from './app/app';
@@ -31,7 +31,9 @@ root.render(
     />
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <App />
+        <Routes>
+          <Route path="/" element={<App />} />
+        </Routes>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
