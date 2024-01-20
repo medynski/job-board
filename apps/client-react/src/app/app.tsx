@@ -4,9 +4,10 @@ import { Offer } from '@job-board/api-interfaces';
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { FunctionComponent } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
+import { Pagination } from './components/pagination';
+import { usePagination } from './hooks/usePagination';
 import { apiUrl } from './utils/api-url';
 
 const MainWrapper = styled.div`
@@ -18,11 +19,7 @@ const pageSize = 10;
 
 export const App: FunctionComponent = () => {
   const queryClient = useQueryClient();
-  // const [page, setPage] = useState(1);
-
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const page = parseInt(queryParams.get('page') || '1', 10);
+  const { page } = usePagination();
 
   const [offersQuery, exchangeRatesQuery] = useQueries({
     queries: [
@@ -80,32 +77,7 @@ export const App: FunctionComponent = () => {
         </button>
       </div>
 
-      <nav>
-        <Link to={page === 1 ? '#' : `/?page=${Math.max(page - 1, 1)}`}>
-          Previous
-        </Link>
-        <span
-          css={css`
-            display: inline-block;
-            margin-right: 20px;
-            margin-left: 20px;
-          `}
-        >
-          {page}
-        </span>
-        <Link
-          to={
-            page === offersQuery.data.pages.totalPages
-              ? '#'
-              : `/?page=${Math.min(
-                  page + 1,
-                  offersQuery.data.pages.totalPages
-                )}`
-          }
-        >
-          Next
-        </Link>
-      </nav>
+      <Pagination totalPages={offersQuery.data.pages.totalPages} />
     </MainWrapper>
   );
 };
