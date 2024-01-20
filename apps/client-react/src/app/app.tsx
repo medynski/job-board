@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import { useState } from 'react';
 import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
 import { apiUrl } from './utils/api-url';
@@ -12,26 +13,27 @@ const MainWrapper = styled.div`
   margin: 0 auto;
 `;
 
+const pageSize = 10;
+
 export const App = () => {
   const queryClient = useQueryClient();
+  const [page, setPage] = useState(1);
 
-  const {
-    isPending: isOffersRequestPending,
-    error: offersError,
-    data: offers,
-  } = useQuery({
-    queryKey: ['offers'],
-    queryFn: () => axios.get(`${apiUrl()}/offers`).then((res) => res.data),
-  });
-
-  const {
-    isPending: isExchangeRatesRequestPending,
-    error: exchangeRatesError,
-    data: exchangeRates,
-  } = useQuery({
-    queryKey: ['exchangeRates'],
-    queryFn: () =>
-      axios.get(`${apiUrl()}/exchange-rates`).then((res) => res.data),
+  const [offersQuery, exchangeRatesQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ['offers', page],
+        queryFn: () =>
+          axios
+            .get(`${apiUrl()}/offers?pageSize=${pageSize}&page=${page}`)
+            .then((res) => res.data),
+      },
+      {
+        queryKey: ['exchangeRates'],
+        queryFn: () =>
+          axios.get(`${apiUrl()}/exchange-rates`).then((res) => res.data),
+      },
+    ],
   });
 
   const { mutateAsync: addOffer } = useMutation({
@@ -44,22 +46,22 @@ export const App = () => {
     },
   });
 
-  if (isOffersRequestPending || isExchangeRatesRequestPending)
+  if (offersQuery.isPending || exchangeRatesQuery.isPending)
     return 'Loading...';
 
-  if (offersError || exchangeRatesError)
+  if (offersQuery.error || exchangeRatesQuery.error)
     return (
-      'An error has occurred: ' + offersError?.message ||
-      exchangeRatesError?.message
+      'An error has occurred: ' + offersQuery.error?.message ||
+      exchangeRatesQuery.error?.message
     );
 
-  console.log({ exchangeRates });
+  console.log({ a: exchangeRatesQuery.data, b: offersQuery.data });
 
   return (
     <MainWrapper>
       <Header />
 
-      {offers.map((offer: Offer, index: number) => (
+      {offersQuery.data.offers.map((offer: Offer, index: number) => (
         <OfferBox offer={offer} key={index} />
       ))}
 
@@ -72,6 +74,32 @@ export const App = () => {
           Add new offer
         </button>
       </div>
+
+      <nav>
+        <button
+          onClick={() => setPage(Math.max(page - 1, 1))}
+          disabled={page === 1}
+        >
+          Previous
+        </button>
+        <span
+          css={css`
+            display: inline-block;
+            margin-right: 20px;
+            margin-left: 20px;
+          `}
+        >
+          {page}
+        </span>
+        <button
+          onClick={() =>
+            setPage(Math.min(page + 1, offersQuery.data.pages.totalPages))
+          }
+          disabled={page === offersQuery.data.pages.totalPages}
+        >
+          Next
+        </button>
+      </nav>
     </MainWrapper>
   );
 };

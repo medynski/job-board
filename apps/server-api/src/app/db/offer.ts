@@ -5,10 +5,22 @@ const getCollection = async (db: Db): Promise<Collection<Offer>> => {
   return db.collection('offers');
 };
 
-export const getAllOffers = async (db: Db): Promise<Offer[]> => {
+export const getOffersCount = async (db: Db): Promise<number> => {
+  const offersCollection = await getCollection(db);
+  const offersDataCount = await offersCollection.countDocuments();
+  return offersDataCount;
+};
+
+export const getAllOffers = async (
+  db: Db,
+  page: number = 1,
+  pageSize: number = 20
+): Promise<Offer[]> => {
   const offersCollection = await getCollection(db);
   const offersData = await offersCollection
-    .find({})
+    .find()
+    .limit(pageSize)
+    .skip(page * pageSize - pageSize)
     .sort({ createdAt: -1 })
     .toArray();
   return offersData;

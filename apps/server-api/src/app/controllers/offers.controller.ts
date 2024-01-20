@@ -1,19 +1,45 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { getAllOffers } from '../db/offer';
+import { getAllOffers, getOffersCount } from '../db/offer';
 import { OfferSchema } from '../schemas/offer-schema';
+import { PagesSchema } from '../schemas/pages-schema';
 
 const getOffers = {
   schema: {
     response: {
       200: {
-        type: 'array',
-        items: OfferSchema,
+        type: 'object',
+        properties: {
+          offers: {
+            type: 'array',
+            items: OfferSchema,
+          },
+          pages: PagesSchema,
+        },
       },
     },
   },
-  handler: async (req: FastifyRequest, rep: FastifyReply) => {
-    const offersData = await getAllOffers(req.db);
-    rep.send(offersData);
+  handler: async (
+    req: FastifyRequest<{
+      Querystring: { page: string; pageSize: string };
+    }>,
+    rep: FastifyReply
+  ) => {
+    const { page, pageSize } = req.query;
+    const pageSizeInt = parseInt(pageSize, 10);
+    const offersCount = await getOffersCount(req.db);
+    const offersData = await getAllOffers(
+      req.db,
+      parseInt(page, 10),
+      pageSizeInt
+    );
+    rep.send({
+      offers: offersData,
+      pages: {
+        page,
+        pageSize,
+        totalPages: Math.ceil(offersCount / pageSizeInt),
+      },
+    });
   },
 };
 
