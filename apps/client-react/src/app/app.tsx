@@ -3,9 +3,9 @@ import { Offer } from '@job-board/api-interfaces';
 import { useQueries } from '@tanstack/react-query';
 import axios from 'axios';
 import { FunctionComponent } from 'react';
+import { Footer } from './components/footer';
 import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
-import { Pagination } from './components/pagination';
 import { useQueryParams } from './hooks/useQueryParams';
 import { apiUrl } from './utils/api-url';
 
@@ -48,11 +48,12 @@ export const App: FunctionComponent = () => {
   return (
     <MainWrapper>
       <Header />
-
-      {offersQuery.data.offers.map((offer: Offer, index: number) => (
-        <OfferBox offer={offer} key={index} />
-      ))}
-      <Pagination totalPages={offersQuery.data.pages.totalPages} />
+      <section>
+        {offersQuery.data.offers.map((offer: Offer, index: number) => (
+          <OfferBox offer={offer} key={index} />
+        ))}
+      </section>
+      <Footer totalPages={offersQuery.data.pages.totalPages} page={page} />
     </MainWrapper>
   );
 };
