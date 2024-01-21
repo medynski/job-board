@@ -56,7 +56,11 @@ export const App: FunctionComponent = () => {
         <>
           <section>
             {offersQuery.data.offers.map((offer: Offer, index: number) => (
-              <OfferBox offer={offer} key={index} />
+              <OfferBox
+                offer={offer}
+                exchangeRates={exchangeRatesQuery.data}
+                key={index}
+              />
             ))}
           </section>
           <Footer totalPages={offersQuery.data.pages.totalPages} page={page} />

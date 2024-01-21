@@ -1,3 +1,3 @@
-export const date = (d: number) => {
+export const formatDate = (d: number) => {
   return new Date(d).toLocaleDateString('pl-PL');
 };

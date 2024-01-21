@@ -5,7 +5,6 @@ export const BlankSlate = styled.div<{ width?: number; height?: number }>`
   border-radius: 5px;
   position: relative;
   display: flex;
-
   width: ${(props) => (props.width || 100) + 'px'};
   height: ${(props) => (props.height || 16) + 'px'};
   animation: linear 1s placeHolderShimmer infinite;

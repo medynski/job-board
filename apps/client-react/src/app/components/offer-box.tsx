@@ -1,10 +1,12 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { Offer } from '@job-board/api-interfaces';
-import { blue, grey } from '@mui/material/colors';
+import { CurrencyResponse, Offer } from '@job-board/api-interfaces';
+import { Tooltip } from '@mui/material';
+import { blue, grey, orange, yellow } from '@mui/material/colors';
 import { FunctionComponent } from 'react';
-import { currency } from '../utils/currency';
-import { date } from '../utils/date';
+import { formatCurrency } from '../utils/format-currency';
+import { formatDate } from '../utils/format-date';
+import { transformCurrency } from '../utils/transform-currency';
 import { CompanyLogo } from './company-logo';
 
 const Box = styled.div`
@@ -16,7 +18,10 @@ const Box = styled.div`
   display: flex;
 `;
 
-export const OfferBox: FunctionComponent<{ offer: Offer }> = ({ offer }) => {
+export const OfferBox: FunctionComponent<{
+  offer: Offer;
+  exchangeRates: CurrencyResponse;
+}> = ({ offer, exchangeRates }) => {
   return (
     <Box>
       <section>
@@ -72,28 +77,58 @@ export const OfferBox: FunctionComponent<{ offer: Offer }> = ({ offer }) => {
         ></div>
 
         {offer.salaryRange.from && offer.salaryRange.to && (
-          <div
-            css={css`
-              font-size: 12px;
-              position: absolute;
-              top: 20px;
-              right: 10px;
-              background-color: #fed11b;
-              padding: 5px;
-              border-radius: 2px;
-              font-weight: bold;
-            `}
+          <Tooltip
+            title={`${formatCurrency(
+              offer.salaryRange.from
+            )} - ${formatCurrency(offer.salaryRange.to)} ${offer.currency}`}
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: 'offset',
+                    options: {
+                      offset: [0, -10],
+                    },
+                  },
+                ],
+              },
+            }}
+            arrow
           >
-            {currency(offer.salaryRange.from)} -{' '}
-            {currency(offer.salaryRange.to)}{' '}
-            <span
+            <div
               css={css`
-                font-size: 8px;
+                font-size: 12px;
+                position: absolute;
+                top: 20px;
+                right: 10px;
+                background-color: ${offer.currency !== 'pln'
+                  ? orange[400]
+                  : yellow[600]};
+                padding: 5px;
+                border-radius: 2px;
+                font-weight: bold;
               `}
             >
-              {offer.currency}
-            </span>
-          </div>
+              {transformCurrency(
+                offer.salaryRange.from,
+                offer.currency,
+                exchangeRates
+              )}{' '}
+              -{' '}
+              {transformCurrency(
+                offer.salaryRange.to,
+                offer.currency,
+                exchangeRates
+              )}{' '}
+              <span
+                css={css`
+                  font-size: 8px;
+                `}
+              >
+                pln
+              </span>
+            </div>
+          </Tooltip>
         )}
 
         <div
@@ -102,14 +137,14 @@ export const OfferBox: FunctionComponent<{ offer: Offer }> = ({ offer }) => {
             position: absolute;
             top: 5px;
             right: 10px;
-            background-color: #383838;
+            background-color: ${grey[800]};
             padding: 2px 5px;
             border-radius: 2px;
             font-weight: bold;
             color: #fff;
           `}
         >
-          {date(offer.createdAt)}
+          {formatDate(offer.createdAt)}
         </div>
       </section>
     </Box>

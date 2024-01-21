@@ -11,6 +11,7 @@ export const ExchangeRatesSchema = {
         PLN: { type: 'number' },
         USD: { type: 'number' },
         GBP: { type: 'number' },
+        EUR: { type: 'number' },
       },
     },
     _id: { type: 'string' },
