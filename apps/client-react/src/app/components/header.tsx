@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import IntegrationInstructionsSharpIcon from '@mui/icons-material/IntegrationInstructionsSharp';
 
 export const Header = () => {
   return (
@@ -17,9 +18,7 @@ export const Header = () => {
           padding-top: 5px;
         `}
       >
-        <span className="material-symbols-outlined">
-          integration_instructions
-        </span>
+        <IntegrationInstructionsSharpIcon />
       </div>
 
       <div

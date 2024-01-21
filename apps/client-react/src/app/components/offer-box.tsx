@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { CurrencyResponse, Offer } from '@job-board/api-interfaces';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Tooltip } from '@mui/material';
 import { blue, grey, orange, yellow } from '@mui/material/colors';
 import { FunctionComponent } from 'react';
@@ -42,7 +43,6 @@ export const OfferBox: FunctionComponent<{
               margin-left: 5px;
               position: relative;
               top: -2px;
-              color: ${blue[700]};
               text-decoration: none;
 
               &:hover {
@@ -54,7 +54,11 @@ export const OfferBox: FunctionComponent<{
             target="_blank"
             rel="noreferrer"
           >
-            open_in_new
+            <OpenInNewIcon
+              css={css`
+                fill: ${blue[700]};
+              `}
+            />
           </a>
         </div>
         <div
