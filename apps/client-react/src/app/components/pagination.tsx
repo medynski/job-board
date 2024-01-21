@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 import { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
-import { usePagination } from '../hooks/usePagination';
+import { useQueryParams } from '../hooks/useQueryParams';
 
 export const Pagination: FunctionComponent<{ totalPages: number }> = ({
   totalPages,
 }) => {
-  const { page } = usePagination();
+  const { page } = useQueryParams();
 
   return (
     <nav>

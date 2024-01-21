@@ -1,13 +1,12 @@
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
-import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import axios from 'axios';
 import { FunctionComponent } from 'react';
 import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
 import { Pagination } from './components/pagination';
-import { usePagination } from './hooks/usePagination';
+import { useQueryParams } from './hooks/useQueryParams';
 import { apiUrl } from './utils/api-url';
 
 const MainWrapper = styled.div`
@@ -18,8 +17,7 @@ const MainWrapper = styled.div`
 const pageSize = 10;
 
 export const App: FunctionComponent = () => {
-  const queryClient = useQueryClient();
-  const { page } = usePagination();
+  const { page } = useQueryParams();
 
   const [offersQuery, exchangeRatesQuery] = useQueries({
     queries: [
@@ -38,16 +36,6 @@ export const App: FunctionComponent = () => {
     ],
   });
 
-  const { mutateAsync: addOffer } = useMutation({
-    mutationFn: async (offer: Partial<Offer>) => {
-      return offer;
-    },
-    onSuccess: (data) => {
-      console.log(data);
-      queryClient.invalidateQueries({ queryKey: ['offers'] });
-    },
-  });
-
   if (offersQuery.isPending || exchangeRatesQuery.isPending)
     return 'Loading...';
 
@@ -57,8 +45,6 @@ export const App: FunctionComponent = () => {
       exchangeRatesQuery.error?.message
     );
 
-  console.log({ a: exchangeRatesQuery.data, b: offersQuery.data });
-
   return (
     <MainWrapper>
       <Header />
@@ -66,17 +52,6 @@ export const App: FunctionComponent = () => {
       {offersQuery.data.offers.map((offer: Offer, index: number) => (
         <OfferBox offer={offer} key={index} />
       ))}
-
-      <div
-        css={css`
-          display: none;
-        `}
-      >
-        <button onClick={async () => addOffer({ title: 'New offer' })}>
-          Add new offer
-        </button>
-      </div>
-
       <Pagination totalPages={offersQuery.data.pages.totalPages} />
     </MainWrapper>
   );
