@@ -12,7 +12,7 @@ export const Footer: FunctionComponent<{
   return (
     <footer
       css={css`
-        padding: 5px 7.5px;
+        padding: 5px 7.5px 30px;
         display: flex;
         justify-content: space-between;
       `}

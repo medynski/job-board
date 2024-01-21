@@ -1,13 +1,14 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
+import { blue, grey } from '@mui/material/colors';
 import { FunctionComponent } from 'react';
 import { currency } from '../utils/currency';
 import { date } from '../utils/date';
 import { CompanyLogo } from './company-logo';
 
 const Box = styled.div`
-  border: 1px solid #000;
+  border: 1px solid ${grey[900]};
   border-radius: 5px;
   margin: 10px;
   padding: 10px;
@@ -36,7 +37,7 @@ export const OfferBox: FunctionComponent<{ offer: Offer }> = ({ offer }) => {
               margin-left: 5px;
               position: relative;
               top: -2px;
-              color: #4e71da;
+              color: ${blue[700]};
               text-decoration: none;
 
               &:hover {
@@ -55,7 +56,7 @@ export const OfferBox: FunctionComponent<{ offer: Offer }> = ({ offer }) => {
           css={css`
             font-size: 10px;
             margin-bottom: 10px;
-            color: #383838;
+            color: ${grey[700]};
           `}
         >
           {offer.companyName}

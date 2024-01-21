@@ -16,6 +16,7 @@ export const Pagination: FunctionComponent<{
       variant="outlined"
       shape="rounded"
       page={page}
+      size="small"
       renderItem={(item) => (
         <PaginationItem
           css={css`
