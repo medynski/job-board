@@ -2,11 +2,12 @@ import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
 import { useQueries } from '@tanstack/react-query';
 import axios from 'axios';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { Footer } from './components/footer';
 import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
 import { OfferBoxBlankSlate } from './components/offer-box-blank-slate';
+import { useDebounceValue } from './hooks/useDebounceValue';
 import { useQueryParams } from './hooks/useQueryParams';
 import { apiUrl } from './utils/api-url';
 
@@ -19,14 +20,18 @@ const pageSize = 10;
 
 export const App: FunctionComponent = () => {
   const { page } = useQueryParams();
+  const [search, setSearch] = useState('');
+  const debounceSearch = useDebounceValue(search);
 
   const [offersQuery, exchangeRatesQuery] = useQueries({
     queries: [
       {
-        queryKey: ['offers', page],
+        queryKey: ['offers', page, debounceSearch],
         queryFn: () => {
           return axios
-            .get(`${apiUrl()}/offers?pageSize=${pageSize}&page=${page}`)
+            .get(
+              `${apiUrl()}/offers?pageSize=${pageSize}&page=${page}&search=${debounceSearch}`
+            )
             .then((res) => res.data);
         },
       },
@@ -47,6 +52,8 @@ export const App: FunctionComponent = () => {
   return (
     <MainWrapper>
       <Header />
+
+      <input type="text" onChange={(e) => setSearch(e.target.value)} />
 
       {offersQuery.isPending || exchangeRatesQuery.isPending ? (
         new Array(pageSize)

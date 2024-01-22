@@ -14,11 +14,13 @@ export const getOffersCount = async (db: Db): Promise<number> => {
 export const getAllOffers = async (
   db: Db,
   page: number = 1,
-  pageSize: number = 20
+  pageSize: number = 20,
+  search: string = ''
 ): Promise<Offer[]> => {
   const offersCollection = await getCollection(db);
+  const regex = new RegExp(search, 'i');
   const offersData = await offersCollection
-    .find()
+    .find({ companyName: { $regex: regex } })
     .limit(pageSize)
     .skip(page * pageSize - pageSize)
     .sort({ createdAt: -1 })

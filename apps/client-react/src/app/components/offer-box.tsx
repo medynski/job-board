@@ -42,7 +42,7 @@ export const OfferBox: FunctionComponent<{
             css={css`
               margin-left: 5px;
               position: relative;
-              top: -2px;
+              top: -7px;
               text-decoration: none;
 
               &:hover {
@@ -56,6 +56,7 @@ export const OfferBox: FunctionComponent<{
           >
             <OpenInNewIcon
               css={css`
+                font-size: 15px;
                 fill: ${blue[700]};
               `}
             />

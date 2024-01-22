@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import IntegrationInstructionsSharpIcon from '@mui/icons-material/IntegrationInstructionsSharp';
+import { Link } from 'react-router-dom';
 
 export const Header = () => {
   return (
@@ -13,13 +14,14 @@ export const Header = () => {
         font-size: 22px;
       `}
     >
-      <div
+      <Link
+        to="/"
         css={css`
           padding-top: 5px;
         `}
       >
         <IntegrationInstructionsSharpIcon />
-      </div>
+      </Link>
 
       <div
         css={css`

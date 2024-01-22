@@ -20,17 +20,18 @@ const getOffers = {
   },
   handler: async (
     req: FastifyRequest<{
-      Querystring: { page: string; pageSize: string };
+      Querystring: { page: string; pageSize: string; search?: string };
     }>,
     rep: FastifyReply
   ) => {
-    const { page, pageSize } = req.query;
+    const { page, pageSize, search } = req.query;
     const pageSizeInt = parseInt(pageSize, 10);
     const offersCount = await getOffersCount(req.db);
     const offersData = await getAllOffers(
       req.db,
       parseInt(page, 10),
-      pageSizeInt
+      pageSizeInt,
+      search
     );
     rep.send({
       offers: offersData,
