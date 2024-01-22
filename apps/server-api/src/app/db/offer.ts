@@ -5,9 +5,15 @@ const getCollection = async (db: Db): Promise<Collection<Offer>> => {
   return db.collection('offers');
 };
 
-export const getOffersCount = async (db: Db): Promise<number> => {
+export const getOffersCount = async (
+  db: Db,
+  search: string = ''
+): Promise<number> => {
+  const regex = new RegExp(search, 'i');
   const offersCollection = await getCollection(db);
-  const offersDataCount = await offersCollection.countDocuments();
+  const offersDataCount = await offersCollection.countDocuments({
+    companyName: { $regex: regex },
+  });
   return offersDataCount;
 };
 

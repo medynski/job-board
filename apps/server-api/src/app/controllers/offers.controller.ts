@@ -26,7 +26,7 @@ const getOffers = {
   ) => {
     const { page, pageSize, search } = req.query;
     const pageSizeInt = parseInt(pageSize, 10);
-    const offersCount = await getOffersCount(req.db);
+    const offersCount = await getOffersCount(req.db, search);
     const offersData = await getAllOffers(
       req.db,
       parseInt(page, 10),
