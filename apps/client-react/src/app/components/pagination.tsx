@@ -1,15 +1,11 @@
-import {
-  Pagination as MuiPagination,
-  PaginationItem,
-  css,
-} from '@mui/material';
-import { FunctionComponent } from 'react';
-import { Link } from 'react-router-dom';
+import { Pagination as MuiPagination } from '@mui/material';
+import { ChangeEvent, FunctionComponent } from 'react';
 
 export const Pagination: FunctionComponent<{
   totalPages: number;
   page: number;
-}> = ({ totalPages, page }) => {
+  onChange: (changeEvent: ChangeEvent<unknown>, page: number) => void;
+}> = ({ totalPages, page, onChange }) => {
   return (
     <MuiPagination
       count={totalPages}
@@ -17,16 +13,7 @@ export const Pagination: FunctionComponent<{
       shape="rounded"
       page={page}
       size="small"
-      renderItem={(item) => (
-        <PaginationItem
-          css={css`
-            border: ${item.page ? '1px solid #222' : ''};
-          `}
-          component={Link}
-          to={`/${item.page === 1 ? '' : `?page=${item.page}`}`}
-          {...item}
-        />
-      )}
+      onChange={onChange}
     />
   );
 };

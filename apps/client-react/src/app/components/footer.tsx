@@ -8,7 +8,8 @@ import { Pagination } from './pagination';
 export const Footer: FunctionComponent<{
   totalPages: number;
   page: number;
-}> = ({ totalPages, page }) => {
+  onPageChange: (page: number) => void;
+}> = ({ totalPages, page, onPageChange }) => {
   return (
     <footer
       css={css`
@@ -19,10 +20,13 @@ export const Footer: FunctionComponent<{
     >
       <div
         css={css`
+          position: relative;
           display: flex;
           justify-content: center;
           align-items: center;
           font-size: 12px;
+          top: -15px;
+          left: 10px;
         `}
       >
         <div>Built with</div>{' '}
@@ -56,7 +60,11 @@ export const Footer: FunctionComponent<{
         </div>
         .
       </div>
-      <Pagination totalPages={totalPages} page={page} />
+      <Pagination
+        totalPages={totalPages}
+        page={page}
+        onChange={(_, page) => onPageChange(page)}
+      />
     </footer>
   );
 };

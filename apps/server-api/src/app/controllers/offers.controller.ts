@@ -24,7 +24,7 @@ const getOffers = {
     }>,
     rep: FastifyReply
   ) => {
-    const { page, pageSize, search } = req.query;
+    const { page = '1', pageSize = '10', search = '' } = req.query;
     const pageSizeInt = parseInt(pageSize, 10);
     const offersCount = await getOffersCount(req.db, search);
     const offersData = await getAllOffers(

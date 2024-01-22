@@ -11,7 +11,7 @@ import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
 import { OfferBoxBlankSlate } from './components/offer-box-blank-slate';
 import { useDebounceValue } from './hooks/useDebounceValue';
-import { useQueryParams } from './hooks/useQueryParams';
+import { SearchParams, useSearchParams } from './hooks/useSearchParams';
 import { apiUrl } from './utils/api-url';
 
 const MainWrapper = styled.div`
@@ -23,32 +23,29 @@ const pageSize = 10;
 
 export const App: FunctionComponent = () => {
   const navigate = useNavigate();
-  const { page, search } = useQueryParams();
-  const [currentFilters, setCurrentFilters] = useState<{
-    page: number;
-    search: string;
-  }>({ page, search });
+  const { page, search, mapSearchParams } = useSearchParams();
+  const [currentFilters, setCurrentFilters] = useState<SearchParams>({
+    page,
+    search,
+    pageSize,
+  });
   const debounceFilters = useDebounceValue(currentFilters);
 
   useEffect(() => {
-    navigate(
-      `/?page=${debounceFilters.page}${
-        debounceFilters.search ? `&search=${debounceFilters.search}` : ''
-      }`
-    );
-  }, [debounceFilters, navigate]);
+    const queryParams = mapSearchParams(debounceFilters);
+    console.warn(queryParams);
+    navigate(`/?${queryParams}`);
+  }, [debounceFilters, navigate, mapSearchParams]);
 
   const [offersQuery, exchangeRatesQuery] = useQueries({
     queries: [
       {
         queryKey: ['offers', debounceFilters.page, debounceFilters.search],
         queryFn: () => {
+          const queryParams = mapSearchParams(currentFilters);
+
           return axios
-            .get(
-              `${apiUrl()}/offers?pageSize=${pageSize}&page=${
-                debounceFilters.page
-              }&search=${debounceFilters.search}`
-            )
+            .get(`${apiUrl()}/offers?${queryParams}`)
             .then((res) => res.data);
         },
       },
@@ -61,7 +58,18 @@ export const App: FunctionComponent = () => {
   });
 
   const handleSearchPhrase = (newSearchPhrase: string) => {
-    setCurrentFilters({ page: 1, search: newSearchPhrase });
+    setCurrentFilters((prev) => ({
+      ...prev,
+      page: 1,
+      search: newSearchPhrase,
+    }));
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentFilters((prev) => ({
+      ...prev,
+      page: newPage,
+    }));
   };
 
   if (offersQuery.error || exchangeRatesQuery.error)
@@ -74,39 +82,44 @@ export const App: FunctionComponent = () => {
     <MainWrapper>
       <Header />
 
-      <TextField
-        id="input-search"
-        label="Search by company name"
-        value={currentFilters.search}
-        onChange={(e) => handleSearchPhrase(e.target.value)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="end">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-        variant="outlined"
-      />
+      <section>
+        <aside>
+          <TextField
+            id="input-search"
+            value={currentFilters.search}
+            onChange={(e) => handleSearchPhrase(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+            variant="outlined"
+            size="small"
+          />
+        </aside>
 
-      {offersQuery.isPending || exchangeRatesQuery.isPending ? (
-        new Array(pageSize)
-          .fill(null)
-          .map((_, index) => <OfferBoxBlankSlate key={index} />)
-      ) : (
-        <>
-          <section>
-            {offersQuery.data.offers.map((offer: Offer, index: number) => (
+        {offersQuery.isPending || exchangeRatesQuery.isPending
+          ? new Array(pageSize)
+              .fill(null)
+              .map((_, index) => <OfferBoxBlankSlate key={index} />)
+          : offersQuery.data.offers.map((offer: Offer, index: number) => (
               <OfferBox
                 offer={offer}
                 exchangeRates={exchangeRatesQuery.data}
                 key={index}
               />
             ))}
-          </section>
-          <Footer totalPages={offersQuery.data.pages.totalPages} page={page} />
-        </>
-      )}
+
+        {offersQuery.isSuccess && (
+          <Footer
+            totalPages={offersQuery.data.pages.totalPages}
+            page={page}
+            onPageChange={handlePageChange}
+          />
+        )}
+      </section>
     </MainWrapper>
   );
 };
