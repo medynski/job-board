@@ -34,6 +34,15 @@ export const getAllOffers = async (
   return offersData;
 };
 
+export const getOfferByUniqId = async (
+  db: Db,
+  uniqId: string
+): Promise<Offer[]> => {
+  const offersCollection = await getCollection(db);
+  const offersData = await offersCollection.find({ uniqId }).toArray();
+  return offersData;
+};
+
 export const getOffer = async (db: Db, id: string): Promise<Offer> => {
   const offersCollection = await getCollection(db);
   const offer = await offersCollection.findOne({ _id: id });
