@@ -1,7 +1,9 @@
+import { SearchParams } from '@job-board/api-interfaces';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { getAllOffers, getOffersCount } from '../db/offer';
 import { OfferSchema } from '../schemas/offer-schema';
 import { PagesSchema } from '../schemas/pages-schema';
+import { mockSlowConnection } from '../util/mock-slow-connection';
 
 const getOffers = {
   schema: {
@@ -20,7 +22,7 @@ const getOffers = {
   },
   handler: async (
     req: FastifyRequest<{
-      Querystring: { page: string; pageSize: string; search?: string };
+      Querystring: SearchParams;
     }>,
     rep: FastifyReply
   ) => {
@@ -33,6 +35,8 @@ const getOffers = {
       pageSizeInt,
       search
     );
+    mockSlowConnection(500);
+
     rep.send({
       offers: offersData,
       pages: {

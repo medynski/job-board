@@ -1,10 +1,5 @@
+import { SearchParams } from '@job-board/api-interfaces';
 import { useLocation } from 'react-router-dom';
-
-export type SearchParams = {
-  page?: number;
-  search?: string;
-  pageSize: number;
-};
 
 const mapSearchParams = (searchParams: SearchParams) => {
   const urlSearchParams = new URLSearchParams();
@@ -12,11 +7,11 @@ const mapSearchParams = (searchParams: SearchParams) => {
     urlSearchParams.set('search', searchParams.search);
   }
 
-  if (searchParams.page && searchParams.page > 1) {
+  if (searchParams.page && +searchParams.page > 1) {
     urlSearchParams.set('page', String(searchParams.page));
   }
 
-  if (searchParams.pageSize !== 10) {
+  if (+searchParams.pageSize !== 10) {
     urlSearchParams.set('pageSize', String(searchParams.page));
   }
 
@@ -26,7 +21,7 @@ const mapSearchParams = (searchParams: SearchParams) => {
 export const useSearchParams = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const page = parseInt(queryParams.get('page') || '1', 10);
+  const page = queryParams.get('page') || '1';
   const search = queryParams.get('search') || '';
 
   return { page, search, mapSearchParams };

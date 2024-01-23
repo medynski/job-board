@@ -31,10 +31,6 @@ export const getAllOffers = async (
     .skip(page * pageSize - pageSize)
     .sort({ createdAt: -1 })
     .toArray();
-  const now = performance.now();
-  while (performance.now() - now < 2000) {
-    // just want to show loader for a short while for a better user experience
-  }
   return offersData;
 };
 

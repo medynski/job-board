@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Offer } from '@job-board/api-interfaces';
+import { Offer, SearchParams } from '@job-board/api-interfaces';
 import SearchIcon from '@mui/icons-material/Search';
 import { InputAdornment, TextField } from '@mui/material';
 import { useQueries } from '@tanstack/react-query';
@@ -11,7 +11,7 @@ import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
 import { OfferBoxBlankSlate } from './components/offer-box-blank-slate';
 import { useDebounceValue } from './hooks/useDebounceValue';
-import { SearchParams, useSearchParams } from './hooks/useSearchParams';
+import { useSearchParams } from './hooks/useSearchParams';
 import { apiUrl } from './utils/api-url';
 
 const MainWrapper = styled.div`
@@ -19,7 +19,7 @@ const MainWrapper = styled.div`
   margin: 0 auto;
 `;
 
-const pageSize = 10;
+const pageSize = '10';
 
 export const App: FunctionComponent = () => {
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ export const App: FunctionComponent = () => {
   const handleSearchPhrase = (newSearchPhrase: string) => {
     setCurrentFilters((prev) => ({
       ...prev,
-      page: 1,
+      page: '1',
       search: newSearchPhrase,
     }));
   };
@@ -68,7 +68,7 @@ export const App: FunctionComponent = () => {
   const handlePageChange = (newPage: number) => {
     setCurrentFilters((prev) => ({
       ...prev,
-      page: newPage,
+      page: String(newPage),
     }));
   };
 
@@ -101,7 +101,7 @@ export const App: FunctionComponent = () => {
         </aside>
 
         {offersQuery.isPending || exchangeRatesQuery.isPending
-          ? new Array(pageSize)
+          ? new Array(+pageSize)
               .fill(null)
               .map((_, index) => <OfferBoxBlankSlate key={index} />)
           : offersQuery.data.offers.map((offer: Offer, index: number) => (
@@ -115,7 +115,7 @@ export const App: FunctionComponent = () => {
         {offersQuery.isSuccess && (
           <Footer
             totalPages={offersQuery.data.pages.totalPages}
-            page={page}
+            page={+page}
             onPageChange={handlePageChange}
           />
         )}
