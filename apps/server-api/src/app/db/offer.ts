@@ -21,19 +21,51 @@ export const getOffersCount = async (
 
 export const getAllOffers = async (
   db: Db,
-  page: number = 1,
+  pageNumber: number = 1,
   pageSize: number = 20,
-  search: string = ''
-): Promise<Offer[]> => {
+  search: string = '',
+  salaryRangeFrom: number = 0,
+  salaryRangeTo: number = 1000000
+): Promise<{ count: number; results: Offer[] }> => {
   const offersCollection = await getOffersCollection(db);
-  const regex = new RegExp(search, 'i');
+
   const offersData = await offersCollection
-    .find({ companyName: { $regex: regex } })
-    .limit(pageSize)
-    .skip(page * pageSize - pageSize)
-    .sort({ createdAt: -1 })
+    .aggregate(
+      [
+        {
+          $match: {
+            'salaryRange.from': { $gt: salaryRangeFrom },
+            'salaryRange.to': { $lt: salaryRangeTo },
+            companyName: { $regex: RegExp(search, 'i') },
+          },
+        },
+        {
+          $sort: {
+            createdAt: -1,
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            count: { $sum: 1 },
+            results: { $push: '$$ROOT' },
+          },
+        },
+        {
+          $project: {
+            count: 1,
+            results: {
+              $slice: ['$results', pageSize * (pageNumber - 1), pageSize],
+            },
+          },
+        },
+      ],
+      { maxTimeMS: 60000, allowDiskUse: true }
+    )
     .toArray();
-  return offersData;
+
+  const data = offersData[0];
+  return { count: data.count, results: data.results };
 };
 
 export const getOfferByUniqId = async (

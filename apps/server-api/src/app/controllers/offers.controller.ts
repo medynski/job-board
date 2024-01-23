@@ -1,6 +1,6 @@
 import { SearchParams } from '@job-board/api-interfaces';
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { getAllOffers, getOffersCount } from '../db/offer';
+import { getAllOffers } from '../db/offer';
 import { OfferSchema } from '../schemas/offer-schema';
 import { PagesSchema } from '../schemas/pages-schema';
 import { mockSlowConnection } from '../util/mock-slow-connection';
@@ -28,7 +28,6 @@ const getOffers = {
   ) => {
     const { page = '1', pageSize = '10', search = '' } = req.query;
     const pageSizeInt = parseInt(pageSize, 10);
-    const offersCount = await getOffersCount(req.db, search);
     const offersData = await getAllOffers(
       req.db,
       parseInt(page, 10),
@@ -38,11 +37,11 @@ const getOffers = {
     mockSlowConnection(500);
 
     rep.send({
-      offers: offersData,
+      offers: offersData.results,
       pages: {
         page,
         pageSize,
-        totalPages: Math.ceil(offersCount / pageSizeInt),
+        totalPages: Math.ceil(offersData.count / pageSizeInt),
       },
     });
   },
