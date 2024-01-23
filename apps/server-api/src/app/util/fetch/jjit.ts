@@ -10,14 +10,12 @@ export const fetchJJIT = async (
   const response = await fetch(url);
   const body = (await response.json()) as JustJoinItResponse;
   const mappedOffers = jjitMapper(body);
-  mappedOffers
-    .filter(async (offer) => {
-      const offerDuplicates = await getOfferByUniqId(db, offer.uniqId);
-      return (await offerDuplicates).length === 0;
-    })
-    .forEach(async (offer) => {
+  mappedOffers.forEach(async (offer) => {
+    const offerDuplicates = await getOfferByUniqId(db, offer.uniqId);
+    if (offerDuplicates.length === 0) {
       await addOffer(db, offer);
-    });
+    }
+  });
 
   // console.log(body.pageProps.dehydratedState.queries[0].state.data.pages[0].data);
 
