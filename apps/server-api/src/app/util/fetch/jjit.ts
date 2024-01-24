@@ -16,6 +16,7 @@ export const fetchJJIT = async (
         await addOffer(db, offer);
       } catch (e) {
         // we don't care about duplicates
+        console.error('Something went wrong while fetching offers from JJIT.');
       }
     });
 

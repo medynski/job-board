@@ -1,4 +1,4 @@
-import { Offer } from '@job-board/api-interfaces';
+import { Nullable, Offer } from '@job-board/api-interfaces';
 import { Collection, Db } from 'mongodb';
 
 export const getOffersCollection = async (
@@ -23,21 +23,45 @@ export const getAllOffers = async (
   db: Db,
   pageNumber: number = 1,
   pageSize: number = 20,
-  search: string = '',
-  salaryRangeFrom: number = 0,
-  salaryRangeTo: number = 1000000
+  search: Nullable<string> = null,
+  salaryRangeFrom: Nullable<number> = null,
+  salaryRangeTo: Nullable<number> = null,
+  createDateFrom: Nullable<number> = null,
+  createDateTo: Nullable<number> = null,
+  requiredSkills: Nullable<string[]> = null
 ): Promise<{ count: number; results: Offer[] }> => {
   const offersCollection = await getOffersCollection(db);
+
+  const $match = {};
+  if (search) {
+    const $regex = new RegExp(search, 'i');
+    $match['$or'] = [{ title: { $regex } }, { companyName: { $regex } }];
+  }
+  if (salaryRangeFrom) {
+    $match['salaryRange.from'] = { $gte: salaryRangeFrom };
+  }
+  if (salaryRangeTo) {
+    $match['salaryRange.to'] = { $lte: salaryRangeTo };
+  }
+  if (createDateFrom) {
+    $match['createdAt'] = { $gte: createDateFrom };
+  }
+  if (createDateTo) {
+    $match['createdAt'] = { $lte: createDateTo };
+  }
+  if (requiredSkills) {
+    $match['requiredSkills'] = {
+      $elemMatch: {
+        $in: requiredSkills,
+      },
+    };
+  }
 
   const offersData = await offersCollection
     .aggregate(
       [
         {
-          $match: {
-            'salaryRange.from': { $gt: salaryRangeFrom },
-            'salaryRange.to': { $lt: salaryRangeTo },
-            companyName: { $regex: RegExp(search, 'i') },
-          },
+          $match,
         },
         {
           $sort: {
@@ -64,8 +88,8 @@ export const getAllOffers = async (
     )
     .toArray();
 
-  const data = offersData[0];
-  return { count: data.count, results: data.results };
+  const { count, results } = offersData[0] || { count: 0, results: [] };
+  return { count, results };
 };
 
 export const getOfferByUniqId = async (
