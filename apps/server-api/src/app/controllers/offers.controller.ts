@@ -1,11 +1,15 @@
 import { SearchParams } from '@job-board/api-interfaces';
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { FastifySchema } from 'fastify/types/schema';
 import { getAllOffers } from '../db/offer';
 import { OfferSchema } from '../schemas/offer-schema';
 import { PagesSchema } from '../schemas/pages-schema';
 import { mockSlowConnection } from '../util/mock-slow-connection';
 
-const getOffers = {
+const getOffers: {
+  schema: FastifySchema;
+  handler: (req: FastifyRequest, rep: FastifyReply) => void;
+} = {
   schema: {
     response: {
       200: {
@@ -19,6 +23,19 @@ const getOffers = {
         },
       },
     },
+    querystring: {
+      type: 'object',
+      properties: {
+        page: { type: 'string' },
+        pageSize: { type: 'string' },
+        search: { type: 'string' },
+        salaryRangeFrom: { type: 'string' },
+        salaryRangeTo: { type: 'string' },
+        createDateFrom: { type: 'string' },
+        createDateTo: { type: 'string' },
+        requiredSkills: { type: 'array', items: { type: 'string' } },
+      },
+    },
   },
   handler: async (
     req: FastifyRequest<{
@@ -26,13 +43,27 @@ const getOffers = {
     }>,
     rep: FastifyReply
   ) => {
-    const { page = '1', pageSize = '10', search = '' } = req.query;
+    const {
+      page = '1',
+      pageSize = '10',
+      search = '',
+      salaryRangeFrom = null,
+      salaryRangeTo = null,
+      createDateFrom = null,
+      createDateTo = null,
+      requiredSkills = null,
+    } = req.query;
     const pageSizeInt = parseInt(pageSize, 10);
     const offersData = await getAllOffers(
       req.db,
       parseInt(page, 10),
       pageSizeInt,
-      search
+      search,
+      salaryRangeFrom !== null ? parseInt(salaryRangeFrom, 10) : null,
+      salaryRangeTo !== null ? parseInt(salaryRangeTo, 10) : null,
+      createDateFrom !== null ? parseInt(createDateFrom, 10) : null,
+      createDateTo !== null ? parseInt(createDateTo, 10) : null,
+      requiredSkills !== null ? requiredSkills.split(',') : null
     );
     mockSlowConnection(500);
 
