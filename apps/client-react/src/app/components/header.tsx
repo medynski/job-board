@@ -1,8 +1,10 @@
 import { css } from '@emotion/react';
-import IntegrationInstructionsSharpIcon from '@mui/icons-material/IntegrationInstructionsSharp';
-import { Link } from 'react-router-dom';
+import { FunctionComponent } from 'react';
+import logo from './../../assets/designer.png';
 
-export const Header = () => {
+export const Header: FunctionComponent<{ redirectToHome: () => void }> = ({
+  redirectToHome,
+}) => {
   return (
     <div
       css={css`
@@ -14,14 +16,21 @@ export const Header = () => {
         font-size: 22px;
       `}
     >
-      <Link
-        to="/"
+      <img
+        src={logo}
+        alt="Job board home"
         css={css`
+          max-width: 25px;
+          max-height: 25px;
           padding-top: 5px;
+
+          &:hover {
+            opacity: 0.7;
+            cursor: pointer;
+          }
         `}
-      >
-        <IntegrationInstructionsSharpIcon />
-      </Link>
+        onClick={redirectToHome}
+      />
 
       <div
         css={css`
@@ -29,7 +38,7 @@ export const Header = () => {
         `}
       >
         <span>
-          <b>Frontend</b> remote jobs
+          <b>JavaScript</b> remote jobs
         </span>
       </div>
     </div>

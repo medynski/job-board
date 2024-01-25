@@ -73,6 +73,14 @@ export const App: FunctionComponent = () => {
     }));
   };
 
+  const handleRedirectToHome = () => {
+    setCurrentFilters((prev) => ({
+      ...prev,
+      page: '1',
+      search: '',
+    }));
+  };
+
   if (offersQuery.error || exchangeRatesQuery.error)
     return (
       'An error has occurred: ' + offersQuery.error?.message ||
@@ -81,7 +89,7 @@ export const App: FunctionComponent = () => {
 
   return (
     <MainWrapper>
-      <Header />
+      <Header redirectToHome={handleRedirectToHome} />
 
       <section>
         <aside
