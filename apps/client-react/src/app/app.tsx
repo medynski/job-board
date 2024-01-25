@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Offer, SearchParams } from '@job-board/api-interfaces';
 import SearchIcon from '@mui/icons-material/Search';
-import { InputAdornment, TextField } from '@mui/material';
+import { InputAdornment, TextField, css } from '@mui/material';
 import { useQueries } from '@tanstack/react-query';
 import axios from 'axios';
 import { FunctionComponent, useEffect, useState } from 'react';
@@ -15,6 +15,7 @@ import { useSearchParams } from './hooks/useSearchParams';
 import { apiUrl } from './utils/api-url';
 
 const MainWrapper = styled.div`
+  position: relative;
   width: 70%;
   margin: 0 auto;
 `;
@@ -83,7 +84,13 @@ export const App: FunctionComponent = () => {
       <Header />
 
       <section>
-        <aside>
+        <aside
+          css={css`
+            position: absolute;
+            top: 5px;
+            right: 10px;
+          `}
+        >
           <TextField
             id="input-search"
             value={currentFilters.search}

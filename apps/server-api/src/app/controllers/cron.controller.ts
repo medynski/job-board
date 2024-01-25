@@ -9,8 +9,8 @@ const getFetchNFJ = async (_: FastifyRequest, reply: FastifyReply) => {
 };
 
 const getFetchJJIT = async (_: FastifyRequest, reply: FastifyReply) => {
-  await fetchJJIT(_.db);
-  reply.send('DB updated.');
+  const count = await fetchJJIT(_.db);
+  reply.send(`DB updated by adding ${count} offers.`);
 };
 
 const getExchangeRates = async (_: FastifyRequest, reply: FastifyReply) => {
