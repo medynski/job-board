@@ -1,6 +1,5 @@
 import { useQueries } from '@tanstack/react-query';
 import axios from 'axios';
-import { useStore } from 'zustand';
 import {
   SearchParamsStore,
   useSearchParamsStore,
@@ -9,12 +8,11 @@ import { apiUrl } from '../utils/api-url';
 import { mapSearchParams } from './useSearchParams';
 
 export const useInitialDataHandler = () => {
-  const store = useSearchParamsStore();
-  const page = useStore(store, (state: SearchParamsStore) => state.page);
-  const search = useStore(store, (state: SearchParamsStore) => state.search);
-
-  const pageSize = useStore(
-    store,
+  const page = useSearchParamsStore((state: SearchParamsStore) => state.page);
+  const search = useSearchParamsStore(
+    (state: SearchParamsStore) => state.search
+  );
+  const pageSize = useSearchParamsStore(
     (state: SearchParamsStore) => state.pageSize
   );
 

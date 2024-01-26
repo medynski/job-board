@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { FunctionComponent } from 'react';
-import { useStore } from 'zustand';
 import {
   SearchParamsStore,
   useSearchParamsStore,
@@ -8,9 +7,7 @@ import {
 import logo from './../../assets/designer.png';
 
 export const Header: FunctionComponent = () => {
-  const store = useSearchParamsStore();
-  const redirectToHome = useStore(
-    store,
+  const redirectToHome = useSearchParamsStore(
     (state: SearchParamsStore) => state.handleRedirectToHome
   );
 

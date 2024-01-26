@@ -1,7 +1,6 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { InputAdornment, TextField } from '@mui/material';
 import { FunctionComponent, useEffect } from 'react';
-import { useStore } from 'zustand';
 import { useDebounceValue } from '../hooks/useDebounceValue';
 import {
   SearchParamsStore,
@@ -9,20 +8,13 @@ import {
 } from './../state/useSearchParamsStore';
 
 export const SearchBox: FunctionComponent = () => {
-  const store = useSearchParamsStore();
-
-  const currentSearch = useStore(
-    store,
+  const currentSearch = useSearchParamsStore(
     (state: SearchParamsStore) => state.currentSearch
   );
-
-  const setCurrentSearch = useStore(
-    store,
+  const setCurrentSearch = useSearchParamsStore(
     (state: SearchParamsStore) => state.setCurrentSearch
   );
-
-  const handleSearchPhrase = useStore(
-    store,
+  const handleSearchPhrase = useSearchParamsStore(
     (state: SearchParamsStore) => state.handleSearchPhrase
   );
 

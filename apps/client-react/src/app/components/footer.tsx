@@ -3,7 +3,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { css } from '@mui/material';
 import { brown, pink } from '@mui/material/colors';
 import { FunctionComponent } from 'react';
-import { useStore } from 'zustand';
 import {
   SearchParamsStore,
   useSearchParamsStore,
@@ -13,13 +12,10 @@ import { Pagination } from './pagination';
 export const Footer: FunctionComponent<{
   totalPages: number;
 }> = ({ totalPages }) => {
-  const store = useSearchParamsStore();
-  const onPageChange = useStore(
-    store,
+  const onPageChange = useSearchParamsStore(
     (state: SearchParamsStore) => state.handlePageChange
   );
-
-  const page = useStore(store, (state: SearchParamsStore) => state.page);
+  const page = useSearchParamsStore((state: SearchParamsStore) => state.page);
 
   return (
     <footer

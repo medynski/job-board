@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
 import { css } from '@mui/material';
 import { FunctionComponent } from 'react';
-import { useStore } from 'zustand';
 import { Footer } from './components/footer';
 import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
@@ -24,9 +23,7 @@ const MainWrapper = styled.div`
 export const App: FunctionComponent = () => {
   useSearchParamsHandler();
   const { offersQuery, exchangeRatesQuery } = useInitialDataHandler();
-  const store = useSearchParamsStore();
-  const pageSize = useStore(
-    store,
+  const pageSize = useSearchParamsStore(
     (state: SearchParamsStore) => state.pageSize
   );
 

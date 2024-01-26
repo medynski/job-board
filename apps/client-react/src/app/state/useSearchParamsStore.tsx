@@ -1,6 +1,6 @@
 import { Nullable } from '@job-board/api-interfaces';
 import { createContext, useContext } from 'react';
-import { StoreApi, createStore } from 'zustand';
+import { StoreApi, createStore, useStore } from 'zustand';
 
 type SearchParamsState = {
   pageSize: string;
@@ -77,10 +77,12 @@ export const createSearchParamsStore = (
 export const SearchParamsContext =
   createContext<Nullable<StoreApi<SearchParamsStore>>>(null);
 
-export const useSearchParamsStore = () => {
+export function useSearchParamsStore<T>(
+  selector: (state: SearchParamsStore) => T
+): T {
   const store = useContext(SearchParamsContext);
   if (!store)
     throw new Error('Missing SearchParamsContext.Provider in the tree.');
 
-  return store;
-};
+  return useStore(store, selector);
+}
