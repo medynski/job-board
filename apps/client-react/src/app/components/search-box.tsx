@@ -1,6 +1,6 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { InputAdornment, TextField } from '@mui/material';
-import { FunctionComponent, useEffect } from 'react';
+import { FunctionComponent, useEffect, useRef } from 'react';
 import { useDebounceValue } from '../hooks/useDebounceValue';
 import {
   SearchParamsStore,
@@ -19,9 +19,14 @@ export const SearchBox: FunctionComponent = () => {
   );
 
   const debounceSearchPhrase = useDebounceValue(currentSearch);
+  const isMountedRef = useRef(false);
 
   useEffect(() => {
-    handleSearchPhrase(debounceSearchPhrase);
+    if (isMountedRef.current) {
+      handleSearchPhrase(debounceSearchPhrase);
+    } else {
+      isMountedRef.current = true;
+    }
   }, [debounceSearchPhrase, handleSearchPhrase]);
 
   return (

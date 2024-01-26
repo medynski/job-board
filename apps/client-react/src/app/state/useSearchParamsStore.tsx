@@ -1,6 +1,8 @@
-import { Nullable } from '@job-board/api-interfaces';
-import { createContext, useContext } from 'react';
-import { StoreApi, createStore, useStore } from 'zustand';
+import type {} from '@redux-devtools/extension'; // required for devtools typing
+import { useContext } from 'react';
+import { createStore, useStore } from 'zustand';
+import { devtools } from 'zustand/middleware';
+import { SearchParamsContext } from './SearchParamsStoreContext';
 
 type SearchParamsState = {
   pageSize: string;
@@ -27,55 +29,69 @@ export type SearchParamsStore = SearchParamsState & {
 export const createSearchParamsStore = (
   initProps?: Partial<SearchParamsStore>
 ) => {
-  return createStore<SearchParamsStore>((set) => {
-    return {
-      ...initialState,
-      ...initProps,
-      initSearchParams: (page: string, search: string) => {
-        console.info('Init search params: ', { page, search });
-        set((state) => ({
-          ...state,
-          page,
-          search,
-        }));
-      },
-      handleSearchPhrase: (searchPhrase: string) => {
-        console.info('Handle search phrase: ', searchPhrase);
-        set((state) => ({
-          ...state,
-          page: '1',
-          search: searchPhrase,
-        }));
-      },
-      setCurrentSearch: (currentSearch: string) => {
-        console.info('Set current search: ', currentSearch);
-        set((state) => ({
-          ...state,
-          currentSearch,
-        }));
-      },
-      handlePageChange: (newPage: number) => {
-        console.info('Handle page change: ', newPage);
-        set((state) => ({
-          ...state,
-          page: String(newPage),
-        }));
-      },
-      handleRedirectToHome: () => {
-        console.info('Handle redirect to home');
-        set((state) => ({
-          ...state,
-          page: '1',
-          search: '',
-          currentSearch: '',
-        }));
-      },
-    };
-  });
+  return createStore<SearchParamsStore>()(
+    devtools((set) => {
+      return {
+        ...initialState,
+        ...initProps,
+        initSearchParams: (page: string, search: string) => {
+          set(
+            (state) => ({
+              ...state,
+              page,
+              search,
+            }),
+            false,
+            'SearchParams/initSearchParams'
+          );
+        },
+        handleSearchPhrase: (searchPhrase: string) => {
+          set(
+            (state) => ({
+              ...state,
+              page: '1',
+              search: searchPhrase,
+            }),
+            false,
+            'SearchParams/handleSearchPhrase'
+          );
+        },
+        setCurrentSearch: (currentSearch: string) => {
+          set(
+            (state) => ({
+              ...state,
+              currentSearch,
+            }),
+            false,
+            'SearchParams/setCurrentSearch'
+          );
+        },
+        handlePageChange: (newPage: number) => {
+          set(
+            (state) => ({
+              ...state,
+              page: String(newPage),
+            }),
+            false,
+            'SearchParams/handlePageChange'
+          );
+        },
+        handleRedirectToHome: () => {
+          set(
+            (state) => ({
+              ...state,
+              page: '1',
+              search: '',
+              currentSearch: '',
+            }),
+            false,
+            'SearchParams/handleRedirectToHome'
+          );
+        },
+      };
+    })
+  );
 };
-
-export const SearchParamsContext =
-  createContext<Nullable<StoreApi<SearchParamsStore>>>(null);
 
 export function useSearchParamsStore<T>(
   selector: (state: SearchParamsStore) => T

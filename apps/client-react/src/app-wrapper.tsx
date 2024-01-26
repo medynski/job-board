@@ -6,26 +6,20 @@ import '@fontsource/roboto/700.css';
 import { grey } from '@mui/material/colors';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { FunctionComponent, useRef } from 'react';
+import { FunctionComponent } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './app/app';
 import { useSearchParams } from './app/hooks/useSearchParams';
-import {
-  SearchParamsContext,
-  createSearchParamsStore,
-} from './app/state/useSearchParamsStore';
+import { SearchParamsStoreProvider } from './app/state/SearchParamsStoreContext';
 import { theme } from './app/theme';
 
 const queryClient = new QueryClient();
 
 export const AppContextWrapper: FunctionComponent = () => {
   const { page, search } = useSearchParams();
-  const store = useRef(
-    createSearchParamsStore({ page, search, currentSearch: search })
-  ).current;
 
   return (
-    <SearchParamsContext.Provider value={store}>
+    <SearchParamsStoreProvider page={page} search={search}>
       <Global
         styles={css`
           * {
@@ -43,7 +37,7 @@ export const AppContextWrapper: FunctionComponent = () => {
           <ReactQueryDevtools initialIsOpen={false} />
         </ThemeProvider>
       </QueryClientProvider>
-    </SearchParamsContext.Provider>
+    </SearchParamsStoreProvider>
   );
 };
 
