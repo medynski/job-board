@@ -1,22 +1,19 @@
 import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
-import SearchIcon from '@mui/icons-material/Search';
-import { InputAdornment, TextField, css } from '@mui/material';
-import { useQueries } from '@tanstack/react-query';
-import axios from 'axios';
-import { FunctionComponent, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { css } from '@mui/material';
+import { FunctionComponent } from 'react';
+import { useStore } from 'zustand';
 import { Footer } from './components/footer';
 import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
 import { OfferBoxBlankSlate } from './components/offer-box-blank-slate';
-import { useDebounceValue } from './hooks/useDebounceValue';
-import { useSearchParams } from './hooks/useSearchParams';
+import { SearchBox } from './components/search-box';
+import { useInitialDataHandler } from './hooks/useInitialDataHandler';
+import { useSearchParamsHandler } from './hooks/useSearchParamsHandler';
 import {
   SearchParamsStore,
   useSearchParamsStore,
 } from './state/useSearchParamsStore';
-import { apiUrl } from './utils/api-url';
 
 const MainWrapper = styled.div`
   position: relative;
@@ -24,65 +21,14 @@ const MainWrapper = styled.div`
   margin: 0 auto;
 `;
 
-const pageSize = '10';
-
 export const App: FunctionComponent = () => {
-  const currentPage = useSearchParamsStore(
-    (state: SearchParamsStore) => state.page
-  );
-  const currentSearch = useSearchParamsStore(
-    (state: SearchParamsStore) => state.search
-  );
-  const currentPageSize = useSearchParamsStore(
+  useSearchParamsHandler();
+  const { offersQuery, exchangeRatesQuery } = useInitialDataHandler();
+  const store = useSearchParamsStore();
+  const pageSize = useStore(
+    store,
     (state: SearchParamsStore) => state.pageSize
   );
-
-  const handleSearchPhrase = useSearchParamsStore(
-    (state: SearchParamsStore) => state.handleSearchPhrase
-  );
-
-  const navigate = useNavigate();
-  const { page, search, mapSearchParams } = useSearchParams();
-  const [searchPhrase, setSearchPhrase] = useState(search);
-  const debounceSearchPhrase = useDebounceValue(searchPhrase);
-
-  useEffect(() => {
-    console.info({ currentPage, currentSearch });
-    const queryParams = mapSearchParams({
-      page: currentPage,
-      search: currentSearch,
-      pageSize: currentPageSize,
-    });
-    navigate(`/?${queryParams}`);
-  }, [currentPage, currentSearch, navigate, mapSearchParams, currentPageSize]);
-
-  useEffect(() => {
-    handleSearchPhrase(debounceSearchPhrase);
-  }, [debounceSearchPhrase, handleSearchPhrase]);
-
-  const [offersQuery, exchangeRatesQuery] = useQueries({
-    queries: [
-      {
-        queryKey: ['offers', page, search],
-        queryFn: () => {
-          const queryParams = mapSearchParams({
-            page,
-            search,
-            pageSize: currentPageSize,
-          });
-
-          return axios
-            .get(`${apiUrl()}/offers?${queryParams}`)
-            .then((res) => res.data);
-        },
-      },
-      {
-        queryKey: ['exchangeRates'],
-        queryFn: () =>
-          axios.get(`${apiUrl()}/exchange-rates`).then((res) => res.data),
-      },
-    ],
-  });
 
   if (offersQuery.error || exchangeRatesQuery.error)
     return (
@@ -102,20 +48,7 @@ export const App: FunctionComponent = () => {
             right: 10px;
           `}
         >
-          <TextField
-            id="input-search"
-            value={searchPhrase}
-            onChange={(e) => setSearchPhrase(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-            variant="outlined"
-            size="small"
-          />
+          <SearchBox />
         </aside>
 
         {offersQuery.isPending || exchangeRatesQuery.isPending
@@ -131,7 +64,7 @@ export const App: FunctionComponent = () => {
             ))}
 
         {offersQuery.isSuccess && (
-          <Footer totalPages={offersQuery.data.pages.totalPages} page={+page} />
+          <Footer totalPages={offersQuery.data.pages.totalPages} />
         )}
       </section>
     </MainWrapper>
