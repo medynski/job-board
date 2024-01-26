@@ -93,12 +93,12 @@ export const createSearchParamsStore = (
   );
 };
 
-export function useSearchParamsStore<T>(
+export const useSearchParamsStore = <T,>(
   selector: (state: SearchParamsStore) => T
-): T {
+): T => {
   const store = useContext(SearchParamsContext);
   if (!store)
     throw new Error('Missing SearchParamsContext.Provider in the tree.');
 
   return useStore(store, selector);
-}
+};
