@@ -19,7 +19,6 @@ export const fetchNFJ = async (
     });
 
     const body = (await response.json()) as NoFluffJobsResponse;
-    console.log(body.postings.length);
     const mappedOffers = nfjMapper(body);
     await Promise.all(
       mappedOffers.map(async (offer) => {
