@@ -22,7 +22,7 @@ export function jjitMapper(data: JustJoinItResponse): Offer[] {
           to: offer.employmentTypes[0].to,
         },
         url: 'https://justjoin.it/offers/' + offer.slug,
-        requiredSkills: offer.requiredSkills,
+        requiredSkills: offer.requiredSkills.sort((a, b) => a.localeCompare(b)),
         origin: Origin.JJIT,
         seniority: [offer.experienceLevel],
         companyLogoUrl: offer.companyLogoThumbUrl,
