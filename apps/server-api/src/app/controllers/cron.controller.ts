@@ -5,8 +5,8 @@ import { fetchJJIT } from '../util/fetch/jjit';
 import { fetchNFJ } from '../util/fetch/nfj';
 
 const getFetchNFJ = async (_: FastifyRequest, reply: FastifyReply) => {
-  const response = await fetchNFJ();
-  reply.send(response);
+  const count = await fetchNFJ(_.db);
+  reply.send(`DB updated by adding ${count} offers.`);
 };
 
 const getFetchJJIT = async (_: FastifyRequest, reply: FastifyReply) => {
