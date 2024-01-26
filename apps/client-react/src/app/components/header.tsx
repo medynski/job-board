@@ -1,10 +1,16 @@
 import { css } from '@emotion/react';
 import { FunctionComponent } from 'react';
+import {
+  SearchParamsStore,
+  useSearchParamsStore,
+} from '../state/useSearchParamsStore';
 import logo from './../../assets/designer.png';
 
-export const Header: FunctionComponent<{ redirectToHome: () => void }> = ({
-  redirectToHome,
-}) => {
+export const Header: FunctionComponent = () => {
+  const redirectToHome = useSearchParamsStore(
+    (state: SearchParamsStore) => state.handleRedirectToHome
+  );
+
   return (
     <div
       css={css`
