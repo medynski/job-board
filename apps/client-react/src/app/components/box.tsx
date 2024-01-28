@@ -4,7 +4,7 @@ import { grey } from '@mui/material/colors';
 export const Box = styled.div`
   border: 1px solid ${grey[900]};
   border-radius: 5px;
-  margin: 10px;
+  margin: 10px 0;
   padding: 10px;
   position: relative;
   display: flex;

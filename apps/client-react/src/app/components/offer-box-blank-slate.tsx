@@ -4,10 +4,10 @@ import { grey } from '@mui/material/colors';
 import { FunctionComponent } from 'react';
 import { BlankSlate } from './blank-slate';
 
-const Box = styled.div`
+const GreyBox = styled.div`
   border: 1px solid ${grey[300]};
   border-radius: 5px;
-  margin: 10px;
+  margin: 10px 0;
   padding: 10px;
   position: relative;
   display: flex;
@@ -15,7 +15,7 @@ const Box = styled.div`
 
 export const OfferBoxBlankSlate: FunctionComponent = () => {
   return (
-    <Box>
+    <GreyBox>
       <section
         css={css`
           margin-right: 10px;
@@ -74,6 +74,6 @@ export const OfferBoxBlankSlate: FunctionComponent = () => {
           <BlankSlate width={52} height={14} />
         </div>
       </section>
-    </Box>
+    </GreyBox>
   );
 };

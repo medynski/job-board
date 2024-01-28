@@ -47,6 +47,7 @@ export const App: FunctionComponent = () => {
         <Box
           css={css`
             width: 200px;
+            margin-right: 10px;
           `}
         >
           <aside>

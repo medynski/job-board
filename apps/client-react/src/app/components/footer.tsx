@@ -33,7 +33,7 @@ export const Footer: FunctionComponent<{
           align-items: center;
           font-size: 12px;
           top: -15px;
-          left: 10px;
+          left: -5px;
         `}
       >
         <div>Built with</div>{' '}
@@ -67,11 +67,23 @@ export const Footer: FunctionComponent<{
         </div>
         .
       </div>
-      <Pagination
-        totalPages={totalPages}
-        page={+page}
-        onChange={(_, page) => onPageChange(page)}
-      />
+      <div
+        css={css`
+          position: relative;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 12px;
+          top: -5px;
+          left: 10px;
+        `}
+      >
+        <Pagination
+          totalPages={totalPages}
+          page={+page}
+          onChange={(_, page) => onPageChange(page)}
+        />
+      </div>
     </footer>
   );
 };
