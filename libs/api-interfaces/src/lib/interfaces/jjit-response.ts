@@ -59,11 +59,11 @@ export interface TermsOfServiceUrl {
 }
 
 export interface RjNew2 {
-  users: User[];
+  users: UserNFJ[];
   clients: Client[];
 }
 
-export interface User {
+export interface UserNFJ {
   url: string;
 }
 

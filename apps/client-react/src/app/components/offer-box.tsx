@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import styled from '@emotion/styled';
 import { CurrencyResponse, Offer } from '@job-board/api-interfaces';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Tooltip } from '@mui/material';
@@ -8,16 +7,8 @@ import { FunctionComponent } from 'react';
 import { formatCurrency } from '../utils/format-currency';
 import { formatDate } from '../utils/format-date';
 import { transformCurrency } from '../utils/transform-currency';
+import { Box } from './box';
 import { CompanyLogo } from './company-logo';
-
-const Box = styled.div`
-  border: 1px solid ${grey[900]};
-  border-radius: 5px;
-  margin: 10px;
-  padding: 10px;
-  position: relative;
-  display: flex;
-`;
 
 export const OfferBox: FunctionComponent<{
   offer: Offer;

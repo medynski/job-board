@@ -1,7 +1,8 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Offer } from '@job-board/api-interfaces';
-import { css } from '@mui/material';
 import { FunctionComponent } from 'react';
+import { Box } from './components/box';
 import { Footer } from './components/footer';
 import { Header } from './components/header';
 import { OfferBox } from './components/offer-box';
@@ -37,33 +38,53 @@ export const App: FunctionComponent = () => {
     <MainWrapper>
       <Header />
 
-      <section>
-        <aside
+      <section
+        css={css`
+          display: flex;
+          flex-direction: row;
+        `}
+      >
+        <Box
           css={css`
-            position: absolute;
-            top: 5px;
-            right: 10px;
+            width: 200px;
           `}
         >
-          <SearchBox />
-        </aside>
+          <aside>
+            <div
+              css={css`
+                margin-bottom: 5px;
+                font-size: 14px;
+              `}
+            >
+              Search criteria:
+            </div>
+            <SearchBox />
+          </aside>
+        </Box>
 
-        {offersQuery.isPending || exchangeRatesQuery.isPending
-          ? new Array(+pageSize)
-              .fill(null)
-              .map((_, index) => <OfferBoxBlankSlate key={index} />)
-          : offersQuery.data.offers.map((offer: Offer, index: number) => (
-              <OfferBox
-                offer={offer}
-                exchangeRates={exchangeRatesQuery.data}
-                key={index}
-              />
-            ))}
-
-        {offersQuery.isSuccess && (
-          <Footer totalPages={offersQuery.data.pages.totalPages} />
-        )}
+        <main
+          css={css`
+            flex-basis: 3;
+            flex-grow: 3;
+          `}
+        >
+          {offersQuery.isPending || exchangeRatesQuery.isPending
+            ? new Array(+pageSize)
+                .fill(null)
+                .map((_, index) => <OfferBoxBlankSlate key={index} />)
+            : offersQuery.data.offers.map((offer: Offer, index: number) => (
+                <OfferBox
+                  offer={offer}
+                  exchangeRates={exchangeRatesQuery.data}
+                  key={index}
+                />
+              ))}
+        </main>
       </section>
+
+      {offersQuery.isSuccess && (
+        <Footer totalPages={offersQuery.data.pages.totalPages} />
+      )}
     </MainWrapper>
   );
 };

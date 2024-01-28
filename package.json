@@ -81,6 +81,8 @@
     "express": "^4.18.1",
     "fastify": "~4.13.0",
     "fastify-plugin": "~4.5.0",
+    "firebase": "^10.7.2",
+    "firebaseui": "^6.1.0",
     "nedb-async-await": "^0.1.2",
     "node-fetch": "^2.6.1",
     "react": "18.2.0",
