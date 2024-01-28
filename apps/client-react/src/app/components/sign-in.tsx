@@ -4,10 +4,12 @@ import { Button, Tooltip } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { FunctionComponent } from 'react';
 import { useAuthHook } from '../hooks/useAuthHook';
+import { useAuthStore } from '../state/useAuthStore';
 import { BlankSlate } from './blank-slate';
 
 export const SignIn: FunctionComponent = () => {
-  const { user, handleSignIn, handleSignOut } = useAuthHook();
+  const { handleSignIn, handleSignOut } = useAuthHook();
+  const user = useAuthStore((state) => state.user);
 
   return user === null ? (
     <BlankSlate width={112} height={31} />

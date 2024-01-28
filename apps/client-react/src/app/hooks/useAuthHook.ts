@@ -1,8 +1,8 @@
-import { Nullable, User } from '@job-board/api-interfaces';
 import { getAnalytics } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useAuthStore } from '../state/useAuthStore';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -20,7 +20,8 @@ const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
 export const useAuthHook = () => {
-  const [user, setUser] = useState<Nullable<User>>(null);
+  const signIn = useAuthStore((state) => state.signIn);
+  const signOut = useAuthStore((state) => state.signOut);
 
   useEffect(() => {
     auth.onAuthStateChanged(
@@ -28,20 +29,20 @@ export const useAuthHook = () => {
         if (userData) {
           console.log('User is signed in', { userData });
           if (userData.displayName && userData.email) {
-            setUser({ email: userData.email, name: userData.displayName });
+            signIn({ email: userData.email, name: userData.displayName });
           } else {
-            setUser(undefined);
+            signOut();
           }
         } else {
           console.log('User is not signed in');
-          setUser(undefined);
+          signOut();
         }
       },
       (error) => {
         console.log(error);
       }
     );
-  }, []);
+  }, [signIn, signOut]);
 
   const handleSignIn = () => {
     signInWithPopup(auth, provider)
@@ -63,11 +64,9 @@ export const useAuthHook = () => {
   const handleSignOut = () => {
     auth
       .signOut()
-      .then(() => {
-        setUser(undefined);
-      })
+      .then(() => signOut())
       .catch((error) => console.info(error));
   };
 
-  return { user, handleSignIn, handleSignOut };
+  return { handleSignIn, handleSignOut };
 };
