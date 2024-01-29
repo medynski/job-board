@@ -1,5 +1,5 @@
 export type Favorite = {
-  offer_uniqId: string;
-  email: string;
+  offerUniqId: string;
+  userId: string;
   _id?: string;
 };

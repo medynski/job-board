@@ -10,9 +10,9 @@ const getFavorites = {
   schema: {
     body: {
       type: 'object',
-      required: ['email'],
+      required: ['userId'],
       properties: {
-        email: { type: 'string' },
+        userId: { type: 'string' },
       },
     },
     response: {
@@ -23,13 +23,12 @@ const getFavorites = {
     },
   },
   handler: async (
-    req: FastifyRequest<{ Body: { email: string } }>,
+    req: FastifyRequest<{ Body: { userId: string } }>,
     rep: FastifyReply
   ) => {
-    const { email } = req.body;
-    console.warn(email);
+    const { userId } = req.body;
 
-    const response = await getAllFavorites(req.db, email);
+    const response = await getAllFavorites(req.db, userId);
     rep.send({ offers: response });
   },
 };
@@ -46,19 +45,19 @@ const postFavorite = {
     },
     body: {
       type: 'object',
-      required: ['email', 'uniqOfferId'],
+      required: ['userId', 'uniqOfferId'],
       properties: {
-        email: { type: 'string' },
+        userId: { type: 'string' },
         uniqOfferId: { type: 'string' },
       },
     },
   },
   handler: async (
-    req: FastifyRequest<{ Body: { email: string; uniqOfferId: string } }>,
+    req: FastifyRequest<{ Body: { userId: string; uniqOfferId: string } }>,
     rep: FastifyReply
   ) => {
-    const { email, uniqOfferId } = req.body;
-    await addFavorite(req.db, email, uniqOfferId);
+    const { userId, uniqOfferId } = req.body;
+    await addFavorite(req.db, userId, uniqOfferId);
     rep.send('Favorite has been added');
   },
 };
@@ -75,19 +74,19 @@ const deleteFavorite = {
     },
     body: {
       type: 'object',
-      required: ['email', 'uniqOfferId'],
+      required: ['userId', 'uniqOfferId'],
       properties: {
-        email: { type: 'string' },
+        userId: { type: 'string' },
         uniqOfferId: { type: 'string' },
       },
     },
   },
   handler: async (
-    req: FastifyRequest<{ Body: { email: string; uniqOfferId: string } }>,
+    req: FastifyRequest<{ Body: { userId: string; uniqOfferId: string } }>,
     rep: FastifyReply
   ) => {
-    const { email, uniqOfferId } = req.body;
-    await deleteSelectedFavorite(req.db, email, uniqOfferId);
+    const { userId, uniqOfferId } = req.body;
+    await deleteSelectedFavorite(req.db, userId, uniqOfferId);
     rep.send('The offer has been deleted.');
   },
 };

@@ -9,33 +9,33 @@ export const getFavoritesCollection = async (
 
 export const getFavoritesCount = async (
   db: Db,
-  email: string = ''
+  userId: string = ''
 ): Promise<number> => {
-  const regex = new RegExp(email, 'i');
+  const regex = new RegExp(userId, 'i');
   const favoritesCollection = await getFavoritesCollection(db);
   const favoritesCount = await favoritesCollection.countDocuments({
-    email: { $regex: regex },
+    userId: { $regex: regex },
   });
   return favoritesCount;
 };
 
 export const getAllFavorites = async (
   db: Db,
-  email: string
+  userId: string
 ): Promise<Nullable<Offer[]>> => {
-  const regex = new RegExp(email, 'i');
+  const regex = new RegExp(userId, 'i');
   const favoritesCollection = await getFavoritesCollection(db);
 
   const favorites = (await favoritesCollection
     .aggregate(
       [
         {
-          $match: { email: regex },
+          $match: { userId: regex },
         },
         {
           $lookup: {
             from: 'offers',
-            localField: 'offer_uniqId',
+            localField: 'offerUniqId',
             foreignField: 'uniqId',
             as: 'favoriteOffers',
           },
@@ -71,18 +71,18 @@ export const getAllFavorites = async (
 
 export const addFavorite = async (
   db: Db,
-  email: string,
-  offer_uniqId: string
+  userId: string,
+  offerUniqId: string
 ): Promise<void> => {
   const favoritesCollection = await getFavoritesCollection(db);
-  await favoritesCollection.insertOne({ email, offer_uniqId });
+  await favoritesCollection.insertOne({ userId, offerUniqId });
 };
 
 export const deleteSelectedFavorite = async (
   db: Db,
-  email: string,
-  offer_uniqId: string
+  userId: string,
+  offerUniqId: string
 ): Promise<void> => {
   const favoritesCollection = await getFavoritesCollection(db);
-  await favoritesCollection.deleteOne({ offer_uniqId, email });
+  await favoritesCollection.deleteOne({ offerUniqId, userId });
 };
