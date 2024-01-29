@@ -3,10 +3,11 @@ import {
   addFavorite,
   deleteSelectedFavorite,
   getAllFavorites,
+  getFavoritesCount,
 } from '../db/favorites';
 import { OfferSchema } from '../schemas/offer-schema';
 
-const getFavorites = {
+const postGetAllFavorites = {
   schema: {
     body: {
       type: 'object',
@@ -30,6 +31,33 @@ const getFavorites = {
 
     const response = await getAllFavorites(req.db, userId);
     rep.send({ offers: response });
+  },
+};
+
+const postGetFavoritesCount = {
+  schema: {
+    body: {
+      type: 'object',
+      required: ['userId'],
+      properties: {
+        userId: { type: 'string' },
+      },
+    },
+    response: {
+      200: {
+        type: 'object',
+        properties: { count: { type: 'number' } },
+      },
+    },
+  },
+  handler: async (
+    req: FastifyRequest<{ Body: { userId: string } }>,
+    rep: FastifyReply
+  ) => {
+    const { userId } = req.body;
+
+    const response = await getFavoritesCount(req.db, userId);
+    rep.send({ count: response });
   },
 };
 
@@ -92,7 +120,8 @@ const deleteFavorite = {
 };
 
 export default {
-  getFavorites,
   deleteFavorite,
   postFavorite,
+  postGetAllFavorites,
+  postGetFavoritesCount,
 };
