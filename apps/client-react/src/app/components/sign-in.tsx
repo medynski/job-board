@@ -3,12 +3,12 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { Button, Tooltip } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { FunctionComponent } from 'react';
-import { useAuthHook } from '../hooks/useAuthHook';
+import { useAuth } from '../hooks/useAuth';
 import { useAuthStore } from '../state/useAuthStore';
 import { BlankSlate } from './blank-slate';
 
 export const SignIn: FunctionComponent = () => {
-  const { handleSignIn, handleSignOut } = useAuthHook();
+  const { handleSignIn, handleSignOut } = useAuth();
   const user = useAuthStore((state) => state.user);
 
   return user === null ? (

@@ -19,7 +19,7 @@ getAnalytics(app);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
-export const useAuthHook = () => {
+export const useAuth = () => {
   const signIn = useAuthStore((state) => state.signIn);
   const signOut = useAuthStore((state) => state.signOut);
 
@@ -28,8 +28,12 @@ export const useAuthHook = () => {
       (userData) => {
         if (userData) {
           console.log('User is signed in', { userData });
-          if (userData.displayName && userData.email) {
-            signIn({ email: userData.email, name: userData.displayName });
+          if (userData.displayName && userData.email && userData.uid) {
+            signIn({
+              email: userData.email,
+              name: userData.displayName,
+              userId: userData.uid,
+            });
           } else {
             signOut();
           }

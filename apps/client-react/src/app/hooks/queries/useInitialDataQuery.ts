@@ -3,11 +3,11 @@ import axios from 'axios';
 import {
   SearchParamsStore,
   useSearchParamsStore,
-} from '../state/useSearchParamsStore';
-import { apiUrl } from '../utils/api-url';
-import { mapSearchParams } from './useSearchParams';
+} from '../../state/useSearchParamsStore';
+import { apiUrl } from '../../utils/api-url';
+import { mapSearchParams } from '../useSearchParams';
 
-export const useInitialDataHandler = () => {
+export const useInitialDataQuery = () => {
   const page = useSearchParamsStore((state: SearchParamsStore) => state.page);
   const search = useSearchParamsStore(
     (state: SearchParamsStore) => state.search

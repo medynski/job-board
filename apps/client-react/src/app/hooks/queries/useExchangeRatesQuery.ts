@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { apiUrl } from '../utils/api-url';
+import { apiUrl } from '../../utils/api-url';
 
-export const useExchangeRates = () => {
+export const useExchangeRatesQuery = () => {
   const exchangeRates = useQuery({
     queryKey: ['exchangeRates'],
     queryFn: () =>

@@ -1,15 +1,15 @@
 import { Offer } from '@job-board/api-interfaces';
 import { FunctionComponent } from 'react';
+import { useInitialDataQuery } from '../hooks/queries/useInitialDataQuery';
 import { OfferBox } from './../components/offer-box';
 import { OfferBoxBlankSlate } from './../components/offer-box-blank-slate';
-import { useInitialDataHandler } from './../hooks/useInitialDataHandler';
 import {
   SearchParamsStore,
   useSearchParamsStore,
 } from './../state/useSearchParamsStore';
 
 export const Offers: FunctionComponent = () => {
-  const { offersQuery, exchangeRatesQuery } = useInitialDataHandler();
+  const { offersQuery, exchangeRatesQuery } = useInitialDataQuery();
   const pageSize = useSearchParamsStore(
     (state: SearchParamsStore) => state.pageSize
   );
