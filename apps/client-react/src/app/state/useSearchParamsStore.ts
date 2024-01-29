@@ -9,6 +9,7 @@ type SearchParamsState = {
   page: string;
   search: string;
   currentSearch: string;
+  hasSearchParamsChanged: boolean;
 };
 
 const initialState: SearchParamsState = {
@@ -16,14 +17,14 @@ const initialState: SearchParamsState = {
   page: '1',
   search: '',
   currentSearch: '',
+  hasSearchParamsChanged: false,
 };
 
 export type SearchParamsStore = SearchParamsState & {
-  initSearchParams: (page: string, search: string) => void;
+  resetSearchParams: () => void;
   handleSearchPhrase: (searchPhrase: string) => void;
   setCurrentSearch: (currentSearch: string) => void;
   handlePageChange: (newPage: number) => void;
-  handleRedirectToHome: () => void;
 };
 
 export const createSearchParamsStore = (
@@ -34,15 +35,14 @@ export const createSearchParamsStore = (
       return {
         ...initialState,
         ...initProps,
-        initSearchParams: (page: string, search: string) => {
+        resetSearchParams: () => {
           set(
             (state) => ({
               ...state,
-              page,
-              search,
+              ...initialState,
             }),
             false,
-            'SearchParams/initSearchParams'
+            'SearchParams/resetSearchParams'
           );
         },
         handleSearchPhrase: (searchPhrase: string) => {
@@ -61,6 +61,7 @@ export const createSearchParamsStore = (
             (state) => ({
               ...state,
               currentSearch,
+              hasSearchParamsChanged: true,
             }),
             false,
             'SearchParams/setCurrentSearch'
@@ -76,24 +77,12 @@ export const createSearchParamsStore = (
             'SearchParams/handlePageChange'
           );
         },
-        handleRedirectToHome: () => {
-          set(
-            (state) => ({
-              ...state,
-              page: '1',
-              search: '',
-              currentSearch: '',
-            }),
-            false,
-            'SearchParams/handleRedirectToHome'
-          );
-        },
       };
     })
   );
 };
 
-export const useSearchParamsStore = <T,>(
+export const useSearchParamsStore = <T>(
   selector: (state: SearchParamsStore) => T
 ): T => {
   const store = useContext(SearchParamsContext);

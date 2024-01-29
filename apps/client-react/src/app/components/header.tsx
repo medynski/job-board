@@ -9,7 +9,7 @@ import { SignIn } from './sign-in';
 
 export const Header: FunctionComponent = () => {
   const redirectToHome = useSearchParamsStore(
-    (state: SearchParamsStore) => state.handleRedirectToHome
+    (state: SearchParamsStore) => state.resetSearchParams
   );
 
   return (

@@ -5,7 +5,7 @@ import { jjitMapper } from '../jjit-mapper';
 
 export const fetchJJIT = async (
   db: Db,
-  url: string = 'https://justjoin.it/_next/data/rToczUJPr4Qm8h_ndZtI1/all-locations/javascript/remote_yes/with-salary_yes.json?slug=all-locations&slug=javascript&slug=remote_yes&slug=with-salary_yes'
+  url: string = 'https://justjoin.it/_next/data/kOVmB9wk2AuDgrz4EXdiz/all-locations/javascript/remote_yes/with-salary_yes.json?slug=all-locations&slug=javascript&slug=remote_yes&slug=with-salary_yes'
 ): Promise<number> => {
   let addedOffersCount = 0;
 

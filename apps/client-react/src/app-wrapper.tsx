@@ -19,7 +19,12 @@ export const AppContextWrapper: FunctionComponent = () => {
   const { page, search } = useSearchParams();
 
   return (
-    <SearchParamsStoreProvider page={page} search={search}>
+    <SearchParamsStoreProvider
+      page={page}
+      search={search}
+      currentSearch={search}
+      hasSearchParamsChanged={search !== ''}
+    >
       <Global
         styles={css`
           * {

@@ -1,7 +1,6 @@
 import { Nullable, User } from '@job-board/api-interfaces';
 import type {} from '@redux-devtools/extension'; // required for devtools typing
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
 
 type AuthState = {
   user: Nullable<User>;
@@ -16,30 +15,20 @@ export type AuthStore = AuthState & {
   signOut: () => void;
 };
 
-export const useAuthStore = create<AuthStore>()(
-  devtools((set) => {
-    return {
-      ...initialState,
-      signIn: (user: User) => {
-        set(
-          (state) => ({
-            ...state,
-            user,
-          }),
-          false,
-          'Auth/signIn'
-        );
-      },
-      signOut: () => {
-        set(
-          (state) => ({
-            ...state,
-            user: undefined,
-          }),
-          false,
-          'Auth/signOut'
-        );
-      },
-    };
-  })
-);
+export const useAuthStore = create<AuthStore>()((set) => {
+  return {
+    ...initialState,
+    signIn: (user: User) => {
+      set((state) => ({
+        ...state,
+        user,
+      }));
+    },
+    signOut: () => {
+      set((state) => ({
+        ...state,
+        user: undefined,
+      }));
+    },
+  };
+});
