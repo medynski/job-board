@@ -1,13 +1,11 @@
-import { SerializedStyles, css } from '@emotion/react';
+import { css } from '@emotion/react';
 import { Button } from '@mui/material';
 import { FunctionComponent } from 'react';
 import { useSearchParamsStore } from '../../state/useSearchParamsStore';
 import { Box } from './box';
 import { SearchBox } from './search-box';
 
-export const SearchCriteria: FunctionComponent<{
-  cssStyles: SerializedStyles;
-}> = ({ cssStyles }) => {
+export const SearchCriteria: FunctionComponent = () => {
   const resetSearchParams = useSearchParamsStore(
     (state) => state.resetSearchParams
   );
@@ -17,7 +15,7 @@ export const SearchCriteria: FunctionComponent<{
   );
 
   return (
-    <Box css={cssStyles}>
+    <Box>
       <aside>
         <div
           css={css`

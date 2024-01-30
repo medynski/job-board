@@ -1,5 +1,6 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { InputAdornment, TextField } from '@mui/material';
+import { InputAdornment, TextField, css } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import { FunctionComponent, useEffect, useRef } from 'react';
 import { useDebounceValue } from '../../hooks/useDebounceValue';
 import {
@@ -36,8 +37,17 @@ export const SearchBox: FunctionComponent = () => {
       onChange={(e) => setCurrentSearch(e.target.value)}
       InputProps={{
         endAdornment: (
-          <InputAdornment position="start">
-            <SearchIcon />
+          <InputAdornment
+            css={css`
+              margin-right: -10px;
+            `}
+            position="start"
+          >
+            <SearchIcon
+              css={css`
+                fill: ${grey[700]};
+              `}
+            />
           </InputAdornment>
         ),
       }}

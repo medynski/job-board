@@ -7,6 +7,7 @@ import {
   useSearchParamsStore,
 } from '../../state/useSearchParamsStore';
 import { Offers } from '../partials/offers';
+import { Pagination } from '../partials/pagination';
 import { SearchCriteria } from '../partials/search-criteria';
 import { Layout } from './_layout';
 
@@ -20,12 +21,14 @@ export const Home: FunctionComponent = () => {
 
   return (
     <Layout>
-      <SearchCriteria
-        cssStyles={css`
+      <div
+        css={css`
           width: 200px;
           margin-right: 10px;
         `}
-      />
+      >
+        <SearchCriteria />
+      </div>
 
       <main
         css={css`
@@ -38,6 +41,15 @@ export const Home: FunctionComponent = () => {
           exchangeRatesQuery={exchangeRatesQuery}
           pageSize={pageSize}
         />
+        <div
+          css={css`
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 0px;
+          `}
+        >
+          <Pagination />
+        </div>
       </main>
     </Layout>
   );

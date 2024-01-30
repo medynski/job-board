@@ -3,24 +3,15 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { css } from '@mui/material';
 import { brown, pink } from '@mui/material/colors';
 import { FunctionComponent } from 'react';
-import {
-  SearchParamsStore,
-  useSearchParamsStore,
-} from '../../state/useSearchParamsStore';
-import { Pagination } from './pagination';
 
-export const Footer: FunctionComponent<{
-  totalPages: number;
-}> = ({ totalPages }) => {
-  const onPageChange = useSearchParamsStore(
-    (state: SearchParamsStore) => state.handlePageChange
-  );
-  const page = useSearchParamsStore((state: SearchParamsStore) => state.page);
-
+export const Footer: FunctionComponent = () => {
   return (
     <footer
       css={css`
-        padding: 5px 7.5px 30px;
+        position: fixed;
+        top: 100px;
+        right: -100px;
+        transform: rotate(-90deg);
         display: flex;
         justify-content: space-between;
       `}
@@ -66,23 +57,6 @@ export const Footer: FunctionComponent<{
           </a>
         </div>
         .
-      </div>
-      <div
-        css={css`
-          position: relative;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-size: 12px;
-          top: -5px;
-          left: 10px;
-        `}
-      >
-        <Pagination
-          totalPages={totalPages}
-          page={+page}
-          onChange={(_, page) => onPageChange(page)}
-        />
       </div>
     </footer>
   );

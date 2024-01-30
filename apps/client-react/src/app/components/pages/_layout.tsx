@@ -9,6 +9,7 @@ const MainWrapper = styled.div`
   position: relative;
   width: 70%;
   margin: 0 auto;
+  margin-bottom: 40px;
 `;
 
 export const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => {
@@ -21,21 +22,20 @@ export const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => {
     );
 
   return (
-    <MainWrapper>
-      <Header />
+    <>
+      <MainWrapper>
+        <Header />
 
-      <section
-        css={css`
-          display: flex;
-          flex-direction: row;
-        `}
-      >
-        {children}
-      </section>
-
-      {offersQuery.isSuccess && (
-        <Footer totalPages={offersQuery.data.pages.totalPages} />
-      )}
-    </MainWrapper>
+        <section
+          css={css`
+            display: flex;
+            flex-direction: row;
+          `}
+        >
+          {children}
+        </section>
+      </MainWrapper>
+      <Footer />
+    </>
   );
 };

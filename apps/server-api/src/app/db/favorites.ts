@@ -59,6 +59,7 @@ export const getAllFavorites = async (
             seniority: 1,
             companyLogoUrl: 1,
             currency: 1,
+            createdAt: 1,
           },
         },
       ],
