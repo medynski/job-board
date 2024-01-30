@@ -1,7 +1,11 @@
-export const apiUrl = (): string => {
+export const apiBaseUrl = (): string => {
   if (!import.meta.env.MODE || import.meta.env.MODE === 'development') {
-    return 'http://localhost:3333/api';
+    return 'http://localhost:3333';
   } else {
-    return '/api';
+    return '';
   }
+};
+
+export const apiUrl = (): string => {
+  return `${apiBaseUrl()}/api`;
 };
