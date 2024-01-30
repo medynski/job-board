@@ -1,8 +1,8 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { cleanSimilarOffers } from '../db/migrations/offers';
 import { fetchExchangeRates } from '../util/fetch/exchange-rates';
-import { fetchJJIT } from '../util/fetch/jjit';
-import { fetchNFJ } from '../util/fetch/nfj';
+import { fetchJJIT } from '../util/fetch/offers/jjit';
+import { fetchNFJ } from '../util/fetch/offers/nfj';
 
 const getFetchNFJ = async (_: FastifyRequest, reply: FastifyReply) => {
   const count = await fetchNFJ(_.db);

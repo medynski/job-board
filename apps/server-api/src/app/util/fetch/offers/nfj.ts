@@ -1,11 +1,11 @@
 import { NoFluffJobsResponse } from '@job-board/api-interfaces';
 import { Db } from 'mongodb';
-import { addOffer } from '../../db/offer';
-import { nfjMapper } from '../nfj-mapper';
+import { nfjMapper } from '../mappers/nfj-mapper';
+import { saveOffers } from './save-offers';
 
 export const fetchNFJ = async (
   db: Db,
-  url: string = 'https://nofluffjobs.com/api/search/posting?page=1&limit=200&salaryCurrency=PLN&salaryPeriod=month&region=pl'
+  url: string = process.env.OFFERS_NFJ_URL
 ) => {
   let addedOffersCount = 0;
   try {
@@ -20,17 +20,7 @@ export const fetchNFJ = async (
 
     const body = (await response.json()) as NoFluffJobsResponse;
     const mappedOffers = nfjMapper(body);
-    await Promise.all(
-      mappedOffers.map(async (offer) => {
-        try {
-          await addOffer(db, offer);
-          addedOffersCount += 1;
-        } catch (e) {
-          // we don't care about duplicates
-          console.error('Something went wrong while fetching offers from NFJ.');
-        }
-      })
-    );
+    addedOffersCount += await saveOffers(db, mappedOffers);
   } catch (e) {
     console.error(e);
   }

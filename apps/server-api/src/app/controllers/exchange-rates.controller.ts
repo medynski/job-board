@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { getCurrentExchangeRates } from '../db/exchange-rates';
 import { ExchangeRatesSchema } from '../schemas/exchange-rates-schema';
-import { exchangeRatesMapper } from '../util/exchange-rates-mapper';
+import { exchangeRatesMapper } from '../util/fetch/mappers/exchange-rates-mapper';
 
 const getExchangeRates = {
   schema: {
