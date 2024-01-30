@@ -73,19 +73,19 @@ const postFavorite = {
     },
     body: {
       type: 'object',
-      required: ['userId', 'uniqOfferId'],
+      required: ['userId', 'offerUniqId'],
       properties: {
         userId: { type: 'string' },
-        uniqOfferId: { type: 'string' },
+        offerUniqId: { type: 'string' },
       },
     },
   },
   handler: async (
-    req: FastifyRequest<{ Body: { userId: string; uniqOfferId: string } }>,
+    req: FastifyRequest<{ Body: { userId: string; offerUniqId: string } }>,
     rep: FastifyReply
   ) => {
-    const { userId, uniqOfferId } = req.body;
-    await addFavorite(req.db, userId, uniqOfferId);
+    const { userId, offerUniqId } = req.body;
+    await addFavorite(req.db, userId, offerUniqId);
     rep.send('Favorite has been added');
   },
 };
@@ -100,20 +100,12 @@ const deleteFavorite = {
         },
       },
     },
-    body: {
-      type: 'object',
-      required: ['userId', 'uniqOfferId'],
-      properties: {
-        userId: { type: 'string' },
-        uniqOfferId: { type: 'string' },
-      },
-    },
   },
   handler: async (
-    req: FastifyRequest<{ Body: { userId: string; uniqOfferId: string } }>,
+    req: FastifyRequest<{ Params: { userId: string; uniqOfferId: string } }>,
     rep: FastifyReply
   ) => {
-    const { userId, uniqOfferId } = req.body;
+    const { userId, uniqOfferId } = req.params;
     await deleteSelectedFavorite(req.db, userId, uniqOfferId);
     rep.send('The offer has been deleted.');
   },

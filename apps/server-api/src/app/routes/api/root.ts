@@ -14,5 +14,8 @@ export default async function (fastify: FastifyInstance) {
   fastify.post('/favorites/count', FavoritesController.postGetFavoritesCount);
   fastify.post('/favorites', FavoritesController.postGetAllFavorites);
   fastify.post('/favorites/add', FavoritesController.postFavorite);
-  fastify.delete('/favorites', FavoritesController.deleteFavorite);
+  fastify.delete(
+    '/favorites/:userId/:uniqOfferId',
+    FavoritesController.deleteFavorite
+  );
 }

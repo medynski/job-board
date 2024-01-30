@@ -1,34 +1,59 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAuthStore } from '../../state/useAuthStore';
 import { apiUrl } from '../../utils/api-url';
 
 export const useFavoritesQuery = () => {
-  const user = useAuthStore((state) => state.user);
+  const userId = useAuthStore((state) => state.user?.userId);
+  const queryClient = useQueryClient();
+
+  const handleSuccessMutation = (data: unknown) => {
+    queryClient.invalidateQueries({
+      queryKey: ['favorites-count', userId],
+    });
+
+    queryClient.invalidateQueries({
+      queryKey: ['favorites', userId],
+    });
+  };
 
   const favorites = useQuery({
-    enabled: !!user,
-    queryKey: ['favorites', user?.userId],
+    enabled: !!userId,
+    queryKey: ['favorites', userId],
     queryFn: () => {
       return axios
         .post(`${apiUrl()}/favorites`, {
-          userId: user?.userId,
+          userId: userId,
         })
         .then((res) => res.data);
     },
   });
 
   const favoritesCount = useQuery({
-    enabled: !!user,
-    queryKey: ['favorites-count', user?.userId],
+    enabled: !!userId,
+    queryKey: ['favorites-count', userId],
     queryFn: () => {
       return axios
         .post(`${apiUrl()}/favorites/count`, {
-          userId: user?.userId,
+          userId: userId,
         })
         .then((res) => res.data);
     },
   });
 
-  return { favorites, favoritesCount };
+  const mutationAdd = useMutation({
+    mutationFn: (offerUniqId: string) => {
+      return axios.post(`${apiUrl()}/favorites/add`, { offerUniqId, userId });
+    },
+    onSuccess: handleSuccessMutation,
+  });
+
+  const mutationRemove = useMutation({
+    mutationFn: (offerUniqId: string) => {
+      return axios.delete(`${apiUrl()}/favorites/${userId}/${offerUniqId}`);
+    },
+    onSuccess: handleSuccessMutation,
+  });
+
+  return { favorites, favoritesCount, mutationAdd, mutationRemove };
 };

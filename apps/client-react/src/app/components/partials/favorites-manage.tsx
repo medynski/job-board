@@ -5,26 +5,36 @@ import { IconButton, Tooltip, css } from '@mui/material';
 import { orange } from '@mui/material/colors';
 import { FunctionComponent, useMemo } from 'react';
 import { useFavoritesQuery } from '../../hooks/queries/useFavoritesQuery';
+import { useAuthStore } from '../../state/useAuthStore';
 
 export const FavoritesManage: FunctionComponent<{ offerUniqId: string }> = ({
   offerUniqId,
 }) => {
-  const { favorites } = useFavoritesQuery();
+  const { favorites, mutationAdd, mutationRemove } = useFavoritesQuery();
   const isFavorite = useMemo(() => {
     return favorites.data?.offers.find(
       (favoriteOffer: Offer) => favoriteOffer.uniqId === offerUniqId
     );
   }, [favorites, offerUniqId]);
+  const userId = useAuthStore((state) => state.user?.userId);
 
   const toggleFavorite = () => {
-    console.info(
-      isFavorite ? 'Removing from favorites' : 'Adding to favorites'
-    );
+    if (userId) {
+      isFavorite
+        ? mutationRemove.mutate(offerUniqId)
+        : mutationAdd.mutate(offerUniqId);
+    }
   };
 
   return (
     <Tooltip
-      title={`${isFavorite ? 'Remove from' : 'Add to'} favorites`}
+      title={`${
+        !userId
+          ? 'Sign in to manage favorites'
+          : isFavorite
+          ? 'Remove from'
+          : 'Add to'
+      } favorites`}
       slotProps={{
         popper: {
           modifiers: [
