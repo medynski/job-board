@@ -1,10 +1,12 @@
 import { css } from '@emotion/react';
 import { FunctionComponent } from 'react';
+import { Link } from 'react-router-dom';
 import {
   SearchParamsStore,
   useSearchParamsStore,
 } from '../state/useSearchParamsStore';
 import logo from './../../assets/designer.png';
+import { FavoritesIndicator } from './favorites-indicator';
 import { SignIn } from './sign-in';
 
 export const Header: FunctionComponent = () => {
@@ -57,7 +59,21 @@ export const Header: FunctionComponent = () => {
         </div>
       </div>
 
-      <div>
+      <div
+        css={css`
+          display: flex;
+          flex-direction: row;
+        `}
+      >
+        <div
+          css={css`
+            margin-right: 10px;
+          `}
+        >
+          <Link to="/favorites">
+            <FavoritesIndicator />
+          </Link>
+        </div>
         <SignIn />
       </div>
     </header>

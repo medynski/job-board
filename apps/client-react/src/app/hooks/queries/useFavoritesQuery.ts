@@ -18,5 +18,17 @@ export const useFavoritesQuery = () => {
     },
   });
 
-  return { favorites };
+  const favoritesCount = useQuery({
+    enabled: !!user,
+    queryKey: ['favorites-count', user?.userId],
+    queryFn: () => {
+      return axios
+        .post(`${apiUrl()}/favorites/count`, {
+          userId: user?.userId,
+        })
+        .then((res) => res.data);
+    },
+  });
+
+  return { favorites, favoritesCount };
 };

@@ -5,7 +5,6 @@ import { Footer } from './components/footer';
 import { Header } from './components/header';
 import { Offers } from './components/offers';
 import { SearchCriteria } from './components/search-criteria';
-import { useFavoritesQuery } from './hooks/queries/useFavoritesQuery';
 import { useInitialDataQuery } from './hooks/queries/useInitialDataQuery';
 import { useSearchParamsHandler } from './hooks/useSearchParamsHandler';
 
@@ -17,7 +16,6 @@ const MainWrapper = styled.div`
 
 export const App: FunctionComponent = () => {
   useSearchParamsHandler();
-  useFavoritesQuery();
   const { offersQuery, exchangeRatesQuery } = useInitialDataQuery();
 
   if (offersQuery.error || exchangeRatesQuery.error)
