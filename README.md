@@ -25,13 +25,9 @@ VITE_FIREBASE_MEASUREMENT_ID="..."
 
 ## Production builds
 
-Build frontend part of the application by running command:
+Build frontend/backend part of the application by running command:
 
-`npx nx run client-react:build`
-
-then build server app with the following command:
-
-`npx nx run server-api:build`
+`npx nx run-many --target=build --projects=server-api,client-react --parallel`
 
 ## Running app on the server
 
