@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import {
   SearchParamsStore,
   useSearchParamsStore,
-} from '../state/useSearchParamsStore';
-import logo from './../../assets/designer.png';
+} from '../../state/useSearchParamsStore';
+import logo from './../../../assets/designer.png';
 import { FavoritesIndicator } from './favorites-indicator';
 import { SignIn } from './sign-in';
 
@@ -31,21 +31,23 @@ export const Header: FunctionComponent = () => {
           font-size: 22px;
         `}
       >
-        <img
-          src={logo}
-          alt="Job board home"
-          css={css`
-            max-width: 25px;
-            max-height: 25px;
-            padding-top: 5px;
+        <Link to="/">
+          <img
+            src={logo}
+            alt="Job board home"
+            css={css`
+              max-width: 25px;
+              max-height: 25px;
+              padding-top: 5px;
 
-            &:hover {
-              opacity: 0.7;
-              cursor: pointer;
-            }
-          `}
-          onClick={redirectToHome}
-        />
+              &:hover {
+                opacity: 0.7;
+                cursor: pointer;
+              }
+            `}
+            onClick={redirectToHome}
+          />
+        </Link>
 
         <div
           css={css`

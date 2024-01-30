@@ -6,7 +6,7 @@ import { FunctionComponent } from 'react';
 import {
   SearchParamsStore,
   useSearchParamsStore,
-} from '../state/useSearchParamsStore';
+} from '../../state/useSearchParamsStore';
 import { Pagination } from './pagination';
 
 export const Footer: FunctionComponent<{

@@ -2,7 +2,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { IconButton, Tooltip, css } from '@mui/material';
 import { red } from '@mui/material/colors';
 import { FunctionComponent } from 'react';
-import { useFavoritesQuery } from '../hooks/queries/useFavoritesQuery';
+import { useFavoritesQuery } from '../../hooks/queries/useFavoritesQuery';
 
 export const FavoritesIndicator: FunctionComponent = () => {
   const { favoritesCount } = useFavoritesQuery();

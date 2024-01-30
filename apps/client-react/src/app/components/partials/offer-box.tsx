@@ -4,9 +4,9 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Tooltip } from '@mui/material';
 import { blue, grey, orange, yellow } from '@mui/material/colors';
 import { FunctionComponent } from 'react';
-import { formatCurrency } from '../utils/format-currency';
-import { formatDate } from '../utils/format-date';
-import { transformCurrency } from '../utils/transform-currency';
+import { formatCurrency } from '../../utils/format-currency';
+import { formatDate } from '../../utils/format-date';
+import { transformCurrency } from '../../utils/transform-currency';
 import { Box } from './box';
 import { CompanyLogo } from './company-logo';
 

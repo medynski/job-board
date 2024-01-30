@@ -1,9 +1,9 @@
 import { SerializedStyles, css } from '@emotion/react';
 import { Button } from '@mui/material';
 import { FunctionComponent } from 'react';
-import { useSearchParamsStore } from '../state/useSearchParamsStore';
-import { Box } from './../components/box';
-import { SearchBox } from './../components/search-box';
+import { useSearchParamsStore } from '../../state/useSearchParamsStore';
+import { Box } from './box';
+import { SearchBox } from './search-box';
 
 export const SearchCriteria: FunctionComponent<{
   cssStyles: SerializedStyles;

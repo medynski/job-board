@@ -3,8 +3,8 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { Button, Tooltip } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { FunctionComponent } from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { useAuthStore } from '../state/useAuthStore';
+import { useAuth } from '../../hooks/useAuth';
+import { useAuthStore } from '../../state/useAuthStore';
 import { BlankSlate } from './blank-slate';
 
 export const SignIn: FunctionComponent = () => {
