@@ -9,8 +9,8 @@ export const Footer: FunctionComponent = () => {
     <footer
       css={css`
         position: fixed;
-        top: 100px;
-        right: -100px;
+        bottom: 110px;
+        right: -90px;
         transform: rotate(-90deg);
         display: flex;
         justify-content: space-between;

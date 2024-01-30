@@ -2,20 +2,13 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import {
   addFavorite,
   deleteSelectedFavorite,
-  getAllFavorites,
-  getFavoritesCount,
+  getAllFavoritesData,
+  getFavoritesCountData,
 } from '../db/favorites';
 import { OfferSchema } from '../schemas/offer-schema';
 
-const postGetAllFavorites = {
+const getAllFavorites = {
   schema: {
-    body: {
-      type: 'object',
-      required: ['userId'],
-      properties: {
-        userId: { type: 'string' },
-      },
-    },
     response: {
       200: {
         type: 'object',
@@ -24,25 +17,18 @@ const postGetAllFavorites = {
     },
   },
   handler: async (
-    req: FastifyRequest<{ Body: { userId: string } }>,
+    req: FastifyRequest<{ Params: { userId: string } }>,
     rep: FastifyReply
   ) => {
-    const { userId } = req.body;
+    const { userId } = req.params;
 
-    const response = await getAllFavorites(req.db, userId);
+    const response = await getAllFavoritesData(req.db, userId);
     rep.send({ offers: response });
   },
 };
 
-const postGetFavoritesCount = {
+const getFavoritesCount = {
   schema: {
-    body: {
-      type: 'object',
-      required: ['userId'],
-      properties: {
-        userId: { type: 'string' },
-      },
-    },
     response: {
       200: {
         type: 'object',
@@ -51,12 +37,12 @@ const postGetFavoritesCount = {
     },
   },
   handler: async (
-    req: FastifyRequest<{ Body: { userId: string } }>,
+    req: FastifyRequest<{ Params: { userId: string } }>,
     rep: FastifyReply
   ) => {
-    const { userId } = req.body;
+    const { userId } = req.params;
 
-    const response = await getFavoritesCount(req.db, userId);
+    const response = await getFavoritesCountData(req.db, userId);
     rep.send({ count: response });
   },
 };
@@ -114,6 +100,6 @@ const deleteFavorite = {
 export default {
   deleteFavorite,
   postFavorite,
-  postGetAllFavorites,
-  postGetFavoritesCount,
+  getAllFavorites,
+  getFavoritesCount,
 };

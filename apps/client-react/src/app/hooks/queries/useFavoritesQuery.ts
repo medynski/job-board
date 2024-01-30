@@ -22,9 +22,7 @@ export const useFavoritesQuery = () => {
     queryKey: ['favorites', userId],
     queryFn: () => {
       return axios
-        .post(`${apiUrl()}/favorites`, {
-          userId: userId,
-        })
+        .get(`${apiUrl()}/favorites/${userId}`)
         .then((res) => res.data);
     },
   });
@@ -34,9 +32,7 @@ export const useFavoritesQuery = () => {
     queryKey: ['favorites-count', userId],
     queryFn: () => {
       return axios
-        .post(`${apiUrl()}/favorites/count`, {
-          userId: userId,
-        })
+        .get(`${apiUrl()}/favorites/count/${userId}`)
         .then((res) => res.data);
     },
   });

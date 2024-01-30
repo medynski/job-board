@@ -7,7 +7,7 @@ export const getFavoritesCollection = async (
   return db.collection('favorites');
 };
 
-export const getFavoritesCount = async (
+export const getFavoritesCountData = async (
   db: Db,
   userId: string = ''
 ): Promise<number> => {
@@ -19,7 +19,7 @@ export const getFavoritesCount = async (
   return favoritesCount;
 };
 
-export const getAllFavorites = async (
+export const getAllFavoritesData = async (
   db: Db,
   userId: string
 ): Promise<Nullable<Offer[]>> => {
