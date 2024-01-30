@@ -69,7 +69,7 @@ export const Header: FunctionComponent = () => {
       >
         <div
           css={css`
-            margin-right: 10px;
+            margin-right: 20px;
           `}
         >
           <Link to="/favorites">

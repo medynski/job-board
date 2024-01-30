@@ -9,6 +9,7 @@ import { formatDate } from '../../utils/format-date';
 import { transformCurrency } from '../../utils/transform-currency';
 import { Box } from './box';
 import { CompanyLogo } from './company-logo';
+import { FavoritesManage } from './favorites-manage';
 
 export const OfferBox: FunctionComponent<{
   offer: Offer;
@@ -141,6 +142,16 @@ export const OfferBox: FunctionComponent<{
           `}
         >
           {formatDate(offer.createdAt)}
+        </div>
+
+        <div
+          css={css`
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+          `}
+        >
+          <FavoritesManage offerUniqId={offer.uniqId} />
         </div>
       </section>
     </Box>
