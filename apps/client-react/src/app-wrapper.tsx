@@ -10,6 +10,7 @@ import { FunctionComponent } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Favorites } from './app/components/pages/favorites';
 import { Home } from './app/components/pages/home';
+import { CustomSnackbar } from './app/components/partials/custom-snackbar';
 import { useSearchParams } from './app/hooks/useSearchParams';
 import { SearchParamsStoreProvider } from './app/state/SearchParamsStoreContext';
 import { theme } from './app/theme';
@@ -44,6 +45,7 @@ export const AppContextWrapper: FunctionComponent = () => {
           <ReactQueryDevtools initialIsOpen={false} />
         </ThemeProvider>
       </QueryClientProvider>
+      <CustomSnackbar />
     </SearchParamsStoreProvider>
   );
 };
