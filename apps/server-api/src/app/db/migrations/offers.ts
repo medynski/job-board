@@ -29,9 +29,12 @@ export const cleanSimilarOffers = async (db: Db) => {
   const similarRecords = await offersCollection
     .aggregate([
       {
+        $unwind: '$requiredSkills',
+      },
+      {
         $group: {
           _id: {
-            requiredSkills: '$requiredSkills',
+            requiredSkill: { $toLower: '$requiredSkills' },
             title: '$title',
             companyName: '$companyName',
             salaryRange: '$salaryRange',
