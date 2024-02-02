@@ -1,9 +1,7 @@
 import { Favorite, Nullable, Offer } from '@job-board/api-interfaces';
 import { Collection, Db } from 'mongodb';
 
-export const getFavoritesCollection = async (
-  db: Db
-): Promise<Collection<Favorite>> => {
+export const getCollection = async (db: Db): Promise<Collection<Favorite>> => {
   return db.collection('favorites');
 };
 
@@ -12,8 +10,8 @@ export const getFavoritesCountData = async (
   userId: string = ''
 ): Promise<number> => {
   const regex = new RegExp(userId, 'i');
-  const favoritesCollection = await getFavoritesCollection(db);
-  const favoritesCount = await favoritesCollection.countDocuments({
+  const collection = await getCollection(db);
+  const favoritesCount = await collection.countDocuments({
     userId: { $regex: regex },
   });
   return favoritesCount;
@@ -24,9 +22,9 @@ export const getAllFavoritesData = async (
   userId: string
 ): Promise<Nullable<Offer[]>> => {
   const regex = new RegExp(userId, 'i');
-  const favoritesCollection = await getFavoritesCollection(db);
+  const collection = await getCollection(db);
 
-  const favorites = (await favoritesCollection
+  const favorites = (await collection
     .aggregate(
       [
         {
@@ -75,8 +73,8 @@ export const addFavorite = async (
   userId: string,
   offerUniqId: string
 ): Promise<void> => {
-  const favoritesCollection = await getFavoritesCollection(db);
-  await favoritesCollection.insertOne({ userId, offerUniqId });
+  const collection = await getCollection(db);
+  await collection.insertOne({ userId, offerUniqId });
 };
 
 export const deleteSelectedFavorite = async (
@@ -84,6 +82,6 @@ export const deleteSelectedFavorite = async (
   userId: string,
   offerUniqId: string
 ): Promise<void> => {
-  const favoritesCollection = await getFavoritesCollection(db);
-  await favoritesCollection.deleteOne({ offerUniqId, userId });
+  const collection = await getCollection(db);
+  await collection.deleteOne({ offerUniqId, userId });
 };

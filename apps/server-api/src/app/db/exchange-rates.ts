@@ -8,9 +8,8 @@ const getCollection = async (db: Db): Promise<Collection<CurrencyResponse>> => {
 export const getCurrentExchangeRates = async (
   db: Db
 ): Promise<WithId<CurrencyResponse>> => {
-  const exchangeRatesCollection = await getCollection(db);
-
-  const entryData = await exchangeRatesCollection
+  const collection = await getCollection(db);
+  const entryData = await collection
     .find()
     .sort({ timestamp: -1 })
     .limit(1)
@@ -23,6 +22,6 @@ export const addExchangeRates = async (
   db: Db,
   entry: CurrencyResponse
 ): Promise<void> => {
-  const exchangeRatesCollection = await getCollection(db);
-  await exchangeRatesCollection.insertOne(entry);
+  const collection = await getCollection(db);
+  await collection.insertOne(entry);
 };

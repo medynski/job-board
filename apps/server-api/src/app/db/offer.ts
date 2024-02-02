@@ -1,9 +1,7 @@
 import { Nullable, Offer } from '@job-board/api-interfaces';
 import { Collection, Db } from 'mongodb';
 
-export const getOffersCollection = async (
-  db: Db
-): Promise<Collection<Offer>> => {
+export const getCollection = async (db: Db): Promise<Collection<Offer>> => {
   return db.collection('offers');
 };
 
@@ -12,8 +10,8 @@ export const getOffersCount = async (
   search: string = ''
 ): Promise<number> => {
   const regex = new RegExp(search, 'i');
-  const offersCollection = await getOffersCollection(db);
-  const offersDataCount = await offersCollection.countDocuments({
+  const collection = await getCollection(db);
+  const offersDataCount = await collection.countDocuments({
     companyName: { $regex: regex },
   });
   return offersDataCount;
@@ -30,7 +28,7 @@ export const getAllOffers = async (
   createDateTo: Nullable<number> = null,
   requiredSkills: Nullable<string[]> = null
 ): Promise<{ count: number; results: Offer[] }> => {
-  const offersCollection = await getOffersCollection(db);
+  const collection = await getCollection(db);
 
   const $match = {};
   if (search) {
@@ -57,7 +55,7 @@ export const getAllOffers = async (
     };
   }
 
-  const offersData = await offersCollection
+  const offersData = await collection
     .aggregate(
       [
         {
@@ -96,28 +94,28 @@ export const getOfferByUniqId = async (
   db: Db,
   uniqId: string
 ): Promise<Offer[]> => {
-  const offersCollection = await getOffersCollection(db);
-  const offersData = await offersCollection.find({ uniqId }).toArray();
+  const collection = await getCollection(db);
+  const offersData = await collection.find({ uniqId }).toArray();
   return offersData;
 };
 
 export const getOffer = async (db: Db, id: string): Promise<Offer> => {
-  const offersCollection = await getOffersCollection(db);
-  const offer = await offersCollection.findOne({ _id: id });
+  const collection = await getCollection(db);
+  const offer = await collection.findOne({ _id: id });
   return offer;
 };
 
 export const addOffer = async (db: Db, offer: Offer): Promise<void> => {
-  const offersCollection = await getOffersCollection(db);
-  await offersCollection.insertOne(offer);
+  const collection = await getCollection(db);
+  await collection.insertOne(offer);
 };
 
 export const updateOffer = async (db: Db, offer: Offer): Promise<void> => {
-  const offersCollection = await getOffersCollection(db);
-  await offersCollection.updateOne({ _id: offer._id }, offer);
+  const collection = await getCollection(db);
+  await collection.updateOne({ _id: offer._id }, offer);
 };
 
 export const deleteOffer = async (db: Db, id: string): Promise<void> => {
-  const offersCollection = await getOffersCollection(db);
-  await offersCollection.deleteOne({ _id: id });
+  const collection = await getCollection(db);
+  await collection.deleteOne({ _id: id });
 };
