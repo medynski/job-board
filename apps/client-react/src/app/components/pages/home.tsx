@@ -6,6 +6,7 @@ import {
   SearchParamsStore,
   useSearchParamsStore,
 } from '../../state/useSearchParamsStore';
+import { Manage } from '../partials/manage';
 import { Offers } from '../partials/offers';
 import { Pagination } from '../partials/pagination';
 import { SearchCriteria } from '../partials/search-criteria';
@@ -28,6 +29,7 @@ export const Home: FunctionComponent = () => {
         `}
       >
         <SearchCriteria />
+        <Manage />
       </div>
 
       <main
