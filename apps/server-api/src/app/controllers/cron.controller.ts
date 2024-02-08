@@ -6,6 +6,7 @@ import { fetchNFJ } from '../util/fetch/offers/nfj';
 
 const getFetchNFJ = async (_: FastifyRequest, reply: FastifyReply) => {
   const count = await fetchNFJ(_.db);
+  cleanSimilarOffers(_.db);
   reply.send(`DB updated by adding ${count} offers.`);
 };
 
