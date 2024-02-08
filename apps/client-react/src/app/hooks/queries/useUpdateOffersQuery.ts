@@ -31,5 +31,20 @@ export const useUpdateOffersQuery = () => {
     },
   });
 
-  return { fetchJIIT, fetchNFJ };
+  const fetchExchangeRates = useMutation({
+    mutationFn: () =>
+      axios
+        .get(`${apiBaseUrl()}/cron/fetch-exchange-rates`)
+        .then((res) => res.data),
+    onSuccess: (response) => {
+      setTimeout(() => {
+        queryClient.invalidateQueries({
+          queryKey: ['offers'],
+        });
+      }, 3000);
+      open(response);
+    },
+  });
+
+  return { fetchJIIT, fetchNFJ, fetchExchangeRates };
 };
