@@ -39,7 +39,7 @@ export const useUpdateOffersQuery = () => {
     onSuccess: (response) => {
       setTimeout(() => {
         queryClient.invalidateQueries({
-          queryKey: ['offers'],
+          queryKey: ['offers', 'exchangeRates'],
         });
       }, 3000);
       open(response);
