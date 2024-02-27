@@ -55,7 +55,7 @@ export const Header: FunctionComponent = () => {
             margin-right: 20px;
           `}
         >
-          <span>
+          <span data-testid="app-name">
             <b>JavaScript</b> remote jobs
           </span>
         </div>

@@ -1,8 +1,9 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
-test('has title', async ({ page }) => {
+test('has app name', async ({ page }) => {
   await page.goto('/');
 
-  // Expect h1 to contain a substring.
-  expect(await page.locator('h1').innerText()).toContain('Welcome');
+  expect(await await page.getByTestId('app-name').innerText()).toContain(
+    'JavaScript remote jobs'
+  );
 });
