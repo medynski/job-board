@@ -6,6 +6,7 @@ import {
 } from '../../state/useSearchParamsStore';
 import { apiUrl } from '../../utils/api-url';
 import { mapSearchParams } from '../useSearchParams';
+import { exchangeRatesQueryArgs } from './useExchangeRatesQuery';
 
 export const useInitialDataQuery = () => {
   const page = useSearchParamsStore((state: SearchParamsStore) => state.page);
@@ -32,11 +33,7 @@ export const useInitialDataQuery = () => {
             .then((res) => res.data);
         },
       },
-      {
-        queryKey: ['exchangeRates'],
-        queryFn: () =>
-          axios.get(`${apiUrl()}/exchange-rates`).then((res) => res.data),
-      },
+      exchangeRatesQueryArgs,
     ],
   });
 
