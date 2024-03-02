@@ -1,11 +1,18 @@
 import { css } from '@emotion/react';
 import { Button } from '@mui/material';
 import { FunctionComponent } from 'react';
+import { usePermissionsQuery } from '../../hooks/queries/usePermissions';
 import { useUpdateOffersQuery } from '../../hooks/queries/useUpdateOffersQuery';
 import { Box } from './box';
 
 export const Manage: FunctionComponent = () => {
   const { fetchJIIT, fetchNFJ, fetchExchangeRates } = useUpdateOffersQuery();
+  const { permissionsQuery } = usePermissionsQuery();
+
+
+  if (permissionsQuery.isFetching || permissionsQuery.data?.role !== 'admin') {
+    return null;
+  }
 
   return (
     <Box>
