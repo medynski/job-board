@@ -1,10 +1,5 @@
+import { UserPermissions } from '@job-board/api-interfaces';
 import { Collection, Db, WithId } from 'mongodb';
-
-type UserPermissions = {
-  _id: string;
-  userId: string;
-  role: 'admin' | 'user';
-};
 
 const getCollection = async (db: Db): Promise<Collection<UserPermissions>> => {
   return db.collection('permissions');

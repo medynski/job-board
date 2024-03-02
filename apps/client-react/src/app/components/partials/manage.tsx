@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { UserRole } from '@job-board/api-interfaces';
 import { Button } from '@mui/material';
 import { FunctionComponent } from 'react';
 import { usePermissionsQuery } from '../../hooks/queries/usePermissions';
@@ -10,7 +11,7 @@ export const Manage: FunctionComponent = () => {
   const { permissionsQuery } = usePermissionsQuery();
 
 
-  if (permissionsQuery.isFetching || permissionsQuery.data?.role !== 'admin') {
+  if (permissionsQuery.isFetching || permissionsQuery.data?.role !== UserRole.ADMIN) {
     return null;
   }
 

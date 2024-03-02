@@ -7,3 +7,5 @@ export * from './lib/models/offer';
 export * from './lib/models/origin';
 export * from './lib/models/search-params';
 export * from './lib/models/user';
+export * from './lib/models/user-permissions';
+export * from './lib/models/user-role';
