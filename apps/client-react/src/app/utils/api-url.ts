@@ -1,6 +1,6 @@
 export const apiBaseUrl = (): string => {
   if (!import.meta.env.MODE || import.meta.env.MODE === 'development') {
-    return 'http://localhost:3333';
+    return 'http://localhost:3000';
   } else {
     return '';
   }
