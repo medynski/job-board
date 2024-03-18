@@ -55,6 +55,7 @@
     "typescript": "~5.2.2",
     "url-loader": "^4.1.1",
     "vite": "^5.0.0",
+    "vite-plugin-pwa": "^0.19.3",
     "vitest": "~0.34.6"
   },
   "dependencies": {
