@@ -13,7 +13,7 @@
         "outputPath": "dist/apps/server-api",
         "format": ["cjs"],
         "bundle": false,
-        "main": "apps/server-api/src/main.ts",
+        "main": "apps/server-api/src/app.ts",
         "tsConfig": "apps/server-api/tsconfig.app.json",
         "assets": ["apps/server-api/src/assets"],
         "generatePackageJson": true,
