@@ -29,7 +29,10 @@ server.register(app);
 const PhusionPassenger: unknown = {};
 
 // Start listening.
-if (typeof PhusionPassenger !== 'undefined') {
+if (
+  typeof PhusionPassenger !== 'undefined' &&
+  process.env.NODE_ENV !== 'development'
+) {
   server.listen({ path: 'passenger', host: '127.0.0.1' });
 } else {
   server.listen({ port, host }, (err) => {
