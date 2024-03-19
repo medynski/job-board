@@ -96,7 +96,7 @@ export const OfferBox: FunctionComponent<{
               css={css`
                 font-size: 12px;
                 position: absolute;
-                top: 20px;
+                top: 24px;
                 right: 10px;
                 background-color: ${offer.currency !== 'pln'
                   ? orange[400]

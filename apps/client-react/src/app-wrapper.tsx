@@ -14,6 +14,7 @@ import { CustomSnackbar } from './app/components/partials/custom-snackbar';
 import { useSearchParams } from './app/hooks/useSearchParams';
 import { SearchParamsStoreProvider } from './app/state/SearchParamsStoreContext';
 import { theme } from './app/theme';
+import './index.css';
 
 const queryClient = new QueryClient();
 

@@ -22,7 +22,7 @@ export const Home: FunctionComponent = () => {
 
   return (
     <Layout>
-      <div
+      <aside
         css={css`
           width: 200px;
           margin-right: 10px;
@@ -30,7 +30,7 @@ export const Home: FunctionComponent = () => {
       >
         <SearchCriteria />
         <Manage />
-      </div>
+      </aside>
 
       <main
         css={css`

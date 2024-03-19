@@ -26,14 +26,14 @@ export const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => {
       <MainWrapper>
         <Header />
 
-        <section
+        <main
           css={css`
             display: flex;
             flex-direction: row;
           `}
         >
           {children}
-        </section>
+        </main>
       </MainWrapper>
       <Footer />
     </>

@@ -12,12 +12,13 @@ const CompanyLogoBox = styled.div<{ url: Nullable<string> }>`
 `;
 
 export const CompanyLogoWrapper = styled.div`
-  width: 50px;
-  height: 50px;
+  width: 72px;
+  height: 72px;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid ${grey[800]};
   margin-right: 10px;
+  position: relative;
 `;
 
 export const CompanyLogo: FunctionComponent<{

@@ -1,11 +1,9 @@
-import styled from '@emotion/styled';
-import { grey } from '@mui/material/colors';
+import { FunctionComponent, PropsWithChildren } from 'react';
 
-export const Box = styled.div`
-  border: 1px solid ${grey[900]};
-  border-radius: 5px;
-  margin: 10px 0;
-  padding: 10px;
-  position: relative;
-  display: flex;
-`;
+export const Box: FunctionComponent<PropsWithChildren> = ({ children }) => {
+  return (
+    <div className="rounded p-2 relative flex border-solid border-gray-700 border my-2.5">
+      {children}
+    </div>
+  );
+};

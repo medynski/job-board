@@ -22,7 +22,7 @@ export const Favorites: FunctionComponent = () => {
 
   return (
     <Layout>
-      <main
+      <section
         css={css`
           flex-basis: 3;
           flex-grow: 3;
@@ -37,7 +37,7 @@ export const Favorites: FunctionComponent = () => {
         ) : (
           <Box>Favorites are available only for logged in users.</Box>
         )}
-      </main>
+      </section>
     </Layout>
   );
 };

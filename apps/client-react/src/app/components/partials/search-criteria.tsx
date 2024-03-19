@@ -16,7 +16,7 @@ export const SearchCriteria: FunctionComponent = () => {
 
   return (
     <Box>
-      <aside>
+      <section>
         <div
           css={css`
             margin-bottom: 5px;
@@ -45,7 +45,7 @@ export const SearchCriteria: FunctionComponent = () => {
             Reset
           </Button>
         </div>
-      </aside>
+      </section>
     </Box>
   );
 };
