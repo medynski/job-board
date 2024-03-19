@@ -21,6 +21,7 @@
     "@nx/workspace": "17.2.8",
     "@playwright/test": "^1.36.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
+    "@rollup/wasm-node": "^4.13.0",
     "@svgr/webpack": "^8.0.1",
     "@swc-node/register": "~1.6.7",
     "@swc/cli": "~0.1.62",
@@ -91,5 +92,8 @@
     "react-router-dom": "6.11.2",
     "tslib": "^2.3.0",
     "zustand": "^4.5.0"
+  },
+  "overrides": {
+    "rollup": "npm:@rollup/wasm-node"
   }
 }
