@@ -41,3 +41,4 @@ Thumbs.db
 .nx/cache
 .env.local
 /apps/client-react/dev-dist
+app.js
