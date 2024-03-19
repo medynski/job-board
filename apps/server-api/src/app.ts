@@ -26,12 +26,18 @@ const server = Fastify({
 
 server.register(app);
 
+const PhusionPassenger: unknown = {};
+
 // Start listening.
-server.listen({ port, host }, (err) => {
-  if (err) {
-    server.log.error(err);
-    process.exit(1);
-  } else {
-    console.log(`[ ready ] http://${host}:${port}`);
-  }
-});
+if (typeof PhusionPassenger !== 'undefined') {
+  server.listen({ path: 'passenger', host: '127.0.0.1' });
+} else {
+  server.listen({ port, host }, (err) => {
+    if (err) {
+      server.log.error(err);
+      process.exit(1);
+    } else {
+      console.log(`[ ready ] http://${host}:${port}`);
+    }
+  });
+}
