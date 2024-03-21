@@ -31,8 +31,8 @@ export const AppContextWrapper: FunctionComponent = () => {
       <Global
         styles={css`
           * {
-            font-family: 'Roboto', sans-serif;
-            color: ${grey[900]};
+            /* font-family: 'Roboto', sans-serif; */
+            color: #000;
           }
         `}
       />

@@ -14,6 +14,10 @@ export const Footer: FunctionComponent = () => {
         transform: rotate(-90deg);
         display: flex;
         justify-content: space-between;
+
+        @media (max-width: 840px) {
+          display: none;
+        }
       `}
     >
       <div

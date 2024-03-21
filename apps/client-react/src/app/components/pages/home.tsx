@@ -22,37 +22,29 @@ export const Home: FunctionComponent = () => {
 
   return (
     <Layout>
-      <aside
-        css={css`
-          width: 200px;
-          margin-right: 10px;
-        `}
-      >
-        <SearchCriteria />
-        <Manage />
-      </aside>
+      <div className="flex flex-col">
+        <aside className="flex flex-row w-full my-2.5">
+          <SearchCriteria />
+          <Manage />
+        </aside>
 
-      <main
-        css={css`
-          flex-basis: 3;
-          flex-grow: 3;
-        `}
-      >
-        <Offers
-          offersQuery={offersQuery}
-          exchangeRatesQuery={exchangeRatesQuery}
-          pageSize={pageSize}
-        />
-        <div
-          css={css`
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 0px;
-          `}
-        >
-          <Pagination />
-        </div>
-      </main>
+        <main>
+          <Offers
+            offersQuery={offersQuery}
+            exchangeRatesQuery={exchangeRatesQuery}
+            pageSize={pageSize}
+          />
+          <div
+            css={css`
+              display: flex;
+              justify-content: flex-end;
+              margin-top: 0px;
+            `}
+          >
+            <Pagination />
+          </div>
+        </main>
+      </div>
     </Layout>
   );
 };

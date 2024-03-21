@@ -1,57 +1,28 @@
-import { css } from '@emotion/react';
 import { UserRole } from '@job-board/api-interfaces';
 import { Button } from '@mui/material';
 import { FunctionComponent } from 'react';
 import { usePermissionsQuery } from '../../hooks/queries/usePermissions';
 import { useUpdateOffersQuery } from '../../hooks/queries/useUpdateOffersQuery';
-import { Box } from './box';
 
 export const Manage: FunctionComponent = () => {
   const { fetchJIIT, fetchNFJ, fetchExchangeRates } = useUpdateOffersQuery();
   const { permissionsQuery } = usePermissionsQuery();
 
-
-  if (permissionsQuery.isFetching || permissionsQuery.data?.role !== UserRole.ADMIN) {
+  if (
+    permissionsQuery.isFetching ||
+    permissionsQuery.data?.role !== UserRole.ADMIN
+  ) {
     return null;
   }
 
   return (
-    <Box>
-      <div
-        css={css`
-          width: 100%;
-        `}
-      >
-        <div
-          css={css`
-            margin-bottom: 5px;
-            font-size: 14px;
-          `}
-        >
-          Manage offers:
-        </div>
-        <div
-          css={css`
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-          `}
-        >
-          <div
-            css={css`
-              margin-bottom: 10px;
-              font-size: 10px;
-            `}
-          >
-            Update offers:
-          </div>
-          <div
-            css={css`
-              width: 100%;
-              display: flex;
-              justify-content: space-evenly;
-            `}
-          >
+    <div className="w-72">
+      <div className="text-sm mb-1.5">Manage offers:</div>
+
+      <div className="flex mt-5 flex-row justify-between">
+        <section className="flex flex-col">
+          <div className="mb-2.5 text-[10px]">Update offers:</div>
+          <div className="w-full flex justify-evenly">
             <Button onClick={() => fetchJIIT.mutate()} variant="outlined">
               JIIT
             </Button>
@@ -59,22 +30,11 @@ export const Manage: FunctionComponent = () => {
               NFJ
             </Button>
           </div>
+        </section>
 
-          <div
-            css={css`
-              margin-top: 20px;
-              margin-bottom: 10px;
-              font-size: 10px;
-            `}
-          >
-            Update exchange rates:
-          </div>
-          <div
-            css={css`
-              display: flex;
-              justify-content: space-evenly;
-            `}
-          >
+        <section className="flex flex-col">
+          <div className="mb-2.5 text-[10px]">Update exchange rates:</div>
+          <div>
             <Button
               onClick={() => fetchExchangeRates.mutate()}
               variant="contained"
@@ -82,8 +42,8 @@ export const Manage: FunctionComponent = () => {
               ER
             </Button>
           </div>
-        </div>
+        </section>
       </div>
-    </Box>
+    </div>
   );
 };

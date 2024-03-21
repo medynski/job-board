@@ -12,7 +12,7 @@ export const SignIn: FunctionComponent = () => {
   const user = useAuthStore((state) => state.user);
 
   return user === null ? (
-    <BlankSlate width={112} height={31} />
+    <BlankSlate width={114} height={40} />
   ) : user ? (
     <Tooltip
       title="Sign out"

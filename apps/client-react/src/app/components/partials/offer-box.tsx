@@ -7,7 +7,6 @@ import { FunctionComponent } from 'react';
 import { formatCurrency } from '../../utils/format-currency';
 import { formatDate } from '../../utils/format-date';
 import { transformCurrency } from '../../utils/transform-currency';
-import { Box } from './box';
 import { CompanyLogo } from './company-logo';
 import { FavoritesManage } from './favorites-manage';
 
@@ -16,7 +15,7 @@ export const OfferBox: FunctionComponent<{
   exchangeRates: CurrencyResponse;
 }> = ({ offer, exchangeRates }) => {
   return (
-    <Box>
+    <div className="rounded p-2 relative flex border-solid border-gray-700 border my-2.5">
       <section>
         <CompanyLogo companyLogoUrl={offer.companyLogoUrl} />
       </section>
@@ -154,6 +153,6 @@ export const OfferBox: FunctionComponent<{
           <FavoritesManage offerUniqId={offer.uniqId} />
         </div>
       </section>
-    </Box>
+    </div>
   );
 };
