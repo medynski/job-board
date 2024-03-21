@@ -27,7 +27,7 @@ export const OfferBox: FunctionComponent<{
             display: flex;
           `}
         >
-          <div className="truncate w-36">{offer.title}</div>
+          <div className="truncate w-36 md:w-auto">{offer.title}</div>
           <a
             className="material-symbols-outlined"
             css={css`
