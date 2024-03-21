@@ -15,7 +15,7 @@ export const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => {
   return (
     <div className="container mx-auto relative">
       <Header />
-      <main className="flex flex-col">{children}</main>
+      <main className="flex flex-col pb-10">{children}</main>
       <Footer />
     </div>
   );
