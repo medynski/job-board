@@ -16,7 +16,7 @@ export const Manage: FunctionComponent = () => {
   }
 
   return (
-    <div className="w-72">
+    <div className="w-full md:w-72">
       <div className="text-sm mb-1.5">Manage offers:</div>
 
       <div className="flex mt-5 flex-row justify-between">

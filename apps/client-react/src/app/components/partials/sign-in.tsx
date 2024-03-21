@@ -1,7 +1,5 @@
-import { css } from '@emotion/react';
 import GoogleIcon from '@mui/icons-material/Google';
 import { Button, Tooltip } from '@mui/material';
-import { grey } from '@mui/material/colors';
 import { FunctionComponent } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useAuthStore } from '../../state/useAuthStore';
@@ -31,13 +29,8 @@ export const SignIn: FunctionComponent = () => {
       arrow
     >
       <Button
-        variant="outlined"
         size="small"
-        css={css`
-          text-transform: none;
-          border-color: ${grey[900]};
-          color: ${grey[900]};
-        `}
+        className="normal-case border-gray-900 text-gray-900 truncate"
         onClick={handleSignOut}
       >
         {user.name}
@@ -48,19 +41,9 @@ export const SignIn: FunctionComponent = () => {
       onClick={handleSignIn}
       variant="contained"
       size="small"
-      css={css`
-        background-color: ${grey[900]};
-        text-transform: none;
-      `}
+      className="bg-gray-900 normal-case truncate"
     >
-      Sign in with{' '}
-      <GoogleIcon
-        css={css`
-          margin-left: 3px;
-          font-size: 18px;
-          fill: #fff;
-        `}
-      />
+      Sign in with <GoogleIcon className="ml-1 text-lg fill-white" />
     </Button>
   );
 };

@@ -53,6 +53,7 @@ export const SearchBox: FunctionComponent = () => {
       }}
       variant="outlined"
       size="small"
+      className="w-full"
     />
   );
 };

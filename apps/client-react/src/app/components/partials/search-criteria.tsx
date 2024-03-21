@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import { Button } from '@mui/material';
 import { FunctionComponent } from 'react';
 import { useSearchParamsStore } from '../../state/useSearchParamsStore';
@@ -14,27 +13,12 @@ export const SearchCriteria: FunctionComponent = () => {
   );
 
   return (
-    <section className="mr-10">
-      <div
-        css={css`
-          margin-bottom: 5px;
-          font-size: 14px;
-        `}
-      >
-        Search criteria:
-      </div>
+    <section className="md:mr-10">
+      <div className="mb-1.5 text-sm">Search criteria:</div>
       <SearchBox />
-      <div
-        css={css`
-          margin-top: 5px;
-          display: flex;
-          justify-content: flex-end;
-        `}
-      >
+      <div className="mt-1.5 flex justify-end">
         <Button
-          css={css`
-            font-size: 10px;
-          `}
+          className="text-xs"
           onClick={resetSearchParams}
           variant="outlined"
           size="small"

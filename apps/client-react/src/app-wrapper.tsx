@@ -3,7 +3,6 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { grey } from '@mui/material/colors';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { FunctionComponent } from 'react';
@@ -14,6 +13,7 @@ import { CustomSnackbar } from './app/components/partials/custom-snackbar';
 import { useSearchParams } from './app/hooks/useSearchParams';
 import { SearchParamsStoreProvider } from './app/state/SearchParamsStoreContext';
 import { theme } from './app/theme';
+import { StyledEngineProvider } from '@mui/material/styles';
 import './index.css';
 
 const queryClient = new QueryClient();
@@ -31,21 +31,24 @@ export const AppContextWrapper: FunctionComponent = () => {
       <Global
         styles={css`
           * {
-            /* font-family: 'Roboto', sans-serif; */
+            font-family: 'Roboto', sans-serif;
             color: #000;
+            box-sizing: border-box;
           }
         `}
       />
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/favorites" element={<Favorites />} />
-          </Routes>
+      <StyledEngineProvider injectFirst>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/favorites" element={<Favorites />} />
+            </Routes>
 
-          <ReactQueryDevtools initialIsOpen={false} />
-        </ThemeProvider>
-      </QueryClientProvider>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </ThemeProvider>
+        </QueryClientProvider>
+      </StyledEngineProvider>
       <CustomSnackbar />
     </SearchParamsStoreProvider>
   );

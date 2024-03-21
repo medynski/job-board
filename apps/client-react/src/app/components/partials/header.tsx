@@ -15,46 +15,18 @@ export const Header: FunctionComponent = () => {
   );
 
   return (
-    <header
-      css={css`
-        border-bottom: 1px solid #222;
-        padding: 10px 0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      `}
-    >
-      <div
-        css={css`
-          display: flex;
-          align-items: center;
-          font-size: 22px;
-        `}
-      >
+    <header className="flex items-center justify-between py-2.5 border-b-black border-b border-solid border-r-0 border-t-0 border-l-0">
+      <div className="text-2xl items-center flex">
         <Link to="/">
           <img
             src={logo}
             alt="Job board home"
-            css={css`
-              max-width: 25px;
-              max-height: 25px;
-              padding-top: 5px;
-
-              &:hover {
-                opacity: 0.7;
-                cursor: pointer;
-              }
-            `}
+            className="max-w-10 max-h-10 md:max-w-6 md:max-h-6 pt-1.5 hover:opacity-70 hover:cursor-pointer"
             onClick={redirectToHome}
           />
         </Link>
 
-        <div
-          css={css`
-            margin-left: 10px;
-            margin-right: 20px;
-          `}
-        >
+        <div className="ml-2.5 mr-5 md:block hidden">
           <span data-testid="app-name">
             <b>JavaScript</b> remote jobs
           </span>
@@ -67,11 +39,7 @@ export const Header: FunctionComponent = () => {
           flex-direction: row;
         `}
       >
-        <div
-          css={css`
-            margin-right: 20px;
-          `}
-        >
+        <div className="mr-5">
           <Link to="/favorites">
             <FavoritesIndicator />
           </Link>

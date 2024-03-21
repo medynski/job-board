@@ -23,8 +23,9 @@ export const Home: FunctionComponent = () => {
   return (
     <Layout>
       <div className="flex flex-col">
-        <aside className="flex flex-row w-full my-2.5">
+        <aside className="flex flex-col-reverse md:flex-row w-full my-2.5">
           <SearchCriteria />
+          <div className="h-5 md:hidden"></div>
           <Manage />
         </aside>
 

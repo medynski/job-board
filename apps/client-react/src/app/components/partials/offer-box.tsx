@@ -27,7 +27,7 @@ export const OfferBox: FunctionComponent<{
             display: flex;
           `}
         >
-          <div>{offer.title}</div>
+          <div className="truncate w-36">{offer.title}</div>
           <a
             className="material-symbols-outlined"
             css={css`
@@ -63,14 +63,9 @@ export const OfferBox: FunctionComponent<{
           {offer.companyName}
         </div>
 
-        <div
-          css={css`
-            font-size: 12px;
-          `}
-          dangerouslySetInnerHTML={{
-            __html: offer.requiredSkills.join(' &#8226; '),
-          }}
-        ></div>
+        <div className="text-xs truncate w-[200px] md:w-full ">
+          {offer.requiredSkills.join(' - ')}
+        </div>
 
         {offer.salaryRange.from && offer.salaryRange.to && (
           <Tooltip
@@ -92,17 +87,11 @@ export const OfferBox: FunctionComponent<{
             arrow
           >
             <div
+              className="top-7 md:top-5.5 absolute text-xs right-2.5 p-1.5 rounded-sm font-bold"
               css={css`
-                font-size: 12px;
-                position: absolute;
-                top: 24px;
-                right: 10px;
                 background-color: ${offer.currency !== 'pln'
                   ? orange[400]
                   : yellow[600]};
-                padding: 5px;
-                border-radius: 2px;
-                font-weight: bold;
               `}
             >
               {transformCurrency(
@@ -116,40 +105,16 @@ export const OfferBox: FunctionComponent<{
                 offer.currency,
                 exchangeRates
               )}{' '}
-              <span
-                css={css`
-                  font-size: 8px;
-                `}
-              >
-                pln
-              </span>
+              <span className="text-xxs">pln</span>
             </div>
           </Tooltip>
         )}
 
-        <div
-          css={css`
-            font-size: 8px;
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            background-color: ${grey[800]};
-            padding: 2px 5px;
-            border-radius: 2px;
-            font-weight: bold;
-            color: #fff;
-          `}
-        >
+        <div className="text-xxs absolute top-2.5 md:top-2 right-2.5 bg-gray-800 text-white font-bold rounded-sm py-0.5 px-1.5">
           {formatDate(offer.createdAt)}
         </div>
 
-        <div
-          css={css`
-            position: absolute;
-            bottom: 0px;
-            right: 0px;
-          `}
-        >
+        <div className="absolute bottom-0 right-0">
           <FavoritesManage offerUniqId={offer.uniqId} />
         </div>
       </section>

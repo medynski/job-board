@@ -12,6 +12,14 @@ module.exports = {
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontSize: {
+        xxs: '0.6rem',
+      },
+    },
+  },
+  important: '#root',
+  corePlugins: {
+    preflight: false,
   },
 };
