@@ -44,6 +44,7 @@ export const OfferBox: FunctionComponent<{
             href={offer.url}
             target="_blank"
             rel="noreferrer"
+            aria-label={`Open job offer ${offer.title} in a new window.`}
           >
             <OpenInNewIcon
               css={css`

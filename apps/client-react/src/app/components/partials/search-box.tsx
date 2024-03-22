@@ -44,6 +44,7 @@ export const SearchBox: FunctionComponent = () => {
       variant="outlined"
       size="small"
       className="w-full"
+      inputProps={{ 'aria-label': 'Search phrase' }}
     />
   );
 };
