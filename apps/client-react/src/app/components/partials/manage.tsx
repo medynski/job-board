@@ -23,7 +23,11 @@ export const Manage: FunctionComponent = () => {
         <section className="flex flex-col">
           <div className="mb-2.5 text-[10px]">Update offers:</div>
           <div className="w-full flex justify-evenly">
-            <Button onClick={() => fetchJIIT.mutate()} variant="outlined">
+            <Button
+              onClick={() => fetchJIIT.mutate()}
+              variant="outlined"
+              className="mr-2.5"
+            >
               JIIT
             </Button>
             <Button onClick={() => fetchNFJ.mutate()} variant="outlined">
