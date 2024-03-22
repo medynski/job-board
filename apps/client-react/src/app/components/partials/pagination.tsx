@@ -22,7 +22,7 @@ export const Pagination: FunctionComponent = () => {
         variant="outlined"
         shape="rounded"
         page={+page}
-        size="small"
+        size="medium"
         onChange={(_, page) => onPageChange(page)}
       />
     )
