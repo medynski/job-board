@@ -9,11 +9,20 @@ import { formatDate } from '../../utils/format-date';
 import { transformCurrency } from '../../utils/transform-currency';
 import { CompanyLogo } from './company-logo';
 import { FavoritesManage } from './favorites-manage';
+import { Link } from 'react-router-dom';
+import {
+  SearchParamsStore,
+  useSearchParamsStore,
+} from '../../state/useSearchParamsStore';
 
 export const OfferBox: FunctionComponent<{
   offer: Offer;
   exchangeRates: CurrencyResponse;
 }> = ({ offer, exchangeRates }) => {
+  const handleSearchPhrase = useSearchParamsStore(
+    (state: SearchParamsStore) => state.handleSearchPhrase
+  );
+
   return (
     <div className="rounded p-2 relative flex border-solid border-gray-700 border my-2.5">
       <section>
@@ -58,8 +67,13 @@ export const OfferBox: FunctionComponent<{
           css={css`
             font-size: 10px;
             margin-bottom: 10px;
-            color: ${grey[700]};
+            color: ${blue[700]};
+            &:hover {
+              cursor: pointer;
+              text-decoration: underline;
+            }
           `}
+          onClick={() => handleSearchPhrase(offer.companyName)}
         >
           {offer.companyName}
         </div>

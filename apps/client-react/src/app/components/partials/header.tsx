@@ -21,7 +21,7 @@ export const Header: FunctionComponent = () => {
           <img
             src={logo}
             alt="Job board home"
-            className="max-w-10 max-h-10 md:max-w-6 md:max-h-6 pt-1.5 hover:opacity-70 hover:cursor-pointer"
+            className="max-w-10 max-h-10 pt-1.5 hover:opacity-70 hover:cursor-pointer"
             onClick={redirectToHome}
           />
         </Link>
