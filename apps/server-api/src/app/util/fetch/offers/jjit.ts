@@ -151,7 +151,8 @@ export const fetchJJIT = async (
           .get()
           .filter(
             (text) => text && !/^\d+$/.test(text) && !['New'].includes(text)
-          );
+          )
+          .filter((skill) => !/^\d+\s*(d|w|mo|y)\s+ago$/i.test(skill));
 
         const href = el.find('a[href]').attr('href') || '';
         const link = href.startsWith('http')
@@ -212,7 +213,7 @@ export const fetchJJIT = async (
 
     // console.log(parsedOffers);
 
-    addedOffersCount = await saveOffers(db, parsedOffers);
+    addedOffersCount = await saveOffers(db, parsedOffers.reverse());
     console.log(`Successfully saved ${addedOffersCount} job offers`);
   } catch (e) {
     console.error('Error fetching data:', e);

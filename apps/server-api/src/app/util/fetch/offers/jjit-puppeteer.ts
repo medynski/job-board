@@ -204,7 +204,8 @@ export const fetchJJIT = async (
               )
               .filter(
                 (text) => text && !/^\d+$/.test(text) && !['New'].includes(text)
-              );
+              )
+              .filter((skill) => !/^\d+\s*(d|w|mo|y)\s+ago$/i.test(skill));
 
             const href =
               el.querySelector('a[href]')?.getAttribute('href') || '';
@@ -345,7 +346,7 @@ const processOffers = async (db: Db, offers: JJITOffer[]): Promise<number> => {
     .map((offer: JJITOffer) => parseJobOffer(offer))
     .filter((offer: Offer | null): offer is Offer => offer !== null);
 
-  const addedOffersCount = await saveOffers(db, parsedOffers);
+  const addedOffersCount = await saveOffers(db, parsedOffers.reverse());
   console.log(`Successfully parsed ${parsedOffers.length} job offers`);
   return addedOffersCount;
 };
