@@ -1,6 +1,6 @@
 import { Db } from 'mongodb';
 import { Offer, Origin } from '@job-board/api-interfaces';
-import puppeteer from 'puppeteer';
+import { chromium } from 'playwright';
 
 interface JJITOffer {
   title: string;
@@ -87,34 +87,28 @@ export const fetchJJIT = async (
   let browser;
   try {
     console.log('Launching browser...');
-    browser = await puppeteer.launch({
+    browser = await chromium.launch({
       headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--disable-gpu',
-        '--window-size=1920x1080',
-      ],
-      executablePath:
-        process.platform === 'darwin'
-          ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-          : undefined,
     });
 
-    const page = await browser.newPage();
-    await page.setUserAgent(
-      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
-    );
+    const context = await browser.newContext({
+      userAgent:
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    });
 
-    // Set viewport to ensure proper rendering
-    await page.setViewport({ width: 1920, height: 32000 });
+    const page = await context.newPage();
+    await page.setViewportSize({ width: 1920, height: 32000 });
 
     console.log('Navigating to URL:', url);
     await page.goto(url, {
-      waitUntil: 'networkidle0',
-      timeout: 30000,
+      waitUntil: 'domcontentloaded',
+      timeout: 60000,
+    });
+
+    // Add additional wait for content
+    console.log('Waiting for content to load...');
+    await page.waitForLoadState('networkidle', { timeout: 60000 }).catch(() => {
+      console.log('Network did not become fully idle, but continuing...');
     });
 
     const pageContent = await page.content();
