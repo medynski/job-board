@@ -5,7 +5,8 @@ import { usePermissionsQuery } from '../../hooks/queries/usePermissions';
 import { useUpdateOffersQuery } from '../../hooks/queries/useUpdateOffersQuery';
 
 export const Manage: FunctionComponent = () => {
-  const { fetchJIIT, fetchNFJ, fetchExchangeRates } = useUpdateOffersQuery();
+  const { fetchJIIT, fetchNFJ, fetchExchangeRates, fetchTP } =
+    useUpdateOffersQuery();
   const { permissionsQuery } = usePermissionsQuery();
 
   if (
@@ -16,7 +17,7 @@ export const Manage: FunctionComponent = () => {
   }
 
   return (
-    <div className="w-full md:w-72">
+    <div className="w-full md:w-96">
       <div className="text-sm mb-1.5">Manage offers:</div>
 
       <div className="flex mt-5 flex-row justify-between">
@@ -30,8 +31,15 @@ export const Manage: FunctionComponent = () => {
             >
               JIIT
             </Button>
-            <Button onClick={() => fetchNFJ.mutate()} variant="outlined">
+            <Button
+              className="mr-2.5"
+              onClick={() => fetchNFJ.mutate()}
+              variant="outlined"
+            >
               NFJ
+            </Button>
+            <Button onClick={() => fetchTP.mutate()} variant="outlined">
+              TP
             </Button>
           </div>
         </section>

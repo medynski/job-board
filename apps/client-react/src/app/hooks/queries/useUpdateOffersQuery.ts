@@ -31,6 +31,17 @@ export const useUpdateOffersQuery = () => {
     },
   });
 
+  const fetchTP = useMutation({
+    mutationFn: () =>
+      axios.get(`${apiBaseUrl()}/cron/fetch-tp`).then((res) => res.data),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({
+        queryKey: ['offers'],
+      });
+      open(response);
+    },
+  });
+
   const fetchExchangeRates = useMutation({
     mutationFn: () =>
       axios
@@ -46,5 +57,5 @@ export const useUpdateOffersQuery = () => {
     },
   });
 
-  return { fetchJIIT, fetchNFJ, fetchExchangeRates };
+  return { fetchJIIT, fetchNFJ, fetchExchangeRates, fetchTP };
 };

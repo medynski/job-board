@@ -8,9 +8,17 @@ import { fetchExchangeRates } from '../util/fetch/exchange-rates';
 // import { fetchJJIT } from '../util/fetch/offers/jjit-puppeteer'; // puppeteer does not work on server
 import { fetchJJIT } from '../util/fetch/offers/jjit';
 import { fetchNFJ } from '../util/fetch/offers/nfj';
+import { fetchTP } from '../util/fetch/offers/tp';
 
 const getFetchNFJ = async (_: FastifyRequest, reply: FastifyReply) => {
   const count = await fetchNFJ(_.db);
+  cleanSimilarOffers(_.db);
+  cleanDuplicatedOffers(_.db);
+  reply.send(`DB updated by adding ${count} offers.`);
+};
+
+const getFetchTP = async (_: FastifyRequest, reply: FastifyReply) => {
+  const count = await fetchTP(_.db);
   cleanSimilarOffers(_.db);
   cleanDuplicatedOffers(_.db);
   reply.send(`DB updated by adding ${count} offers.`);
@@ -33,4 +41,5 @@ export default {
   getFetchNFJ,
   getFetchJJIT,
   getExchangeRates,
+  getFetchTP,
 };
