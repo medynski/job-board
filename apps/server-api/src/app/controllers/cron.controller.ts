@@ -4,6 +4,8 @@ import {
   cleanSimilarOffers,
 } from '../db/migrations/offers';
 import { fetchExchangeRates } from '../util/fetch/exchange-rates';
+
+// import { fetchJJIT } from '../util/fetch/offers/jjit-puppeteer'; // puppeteer does not work on server
 import { fetchJJIT } from '../util/fetch/offers/jjit';
 import { fetchNFJ } from '../util/fetch/offers/nfj';
 

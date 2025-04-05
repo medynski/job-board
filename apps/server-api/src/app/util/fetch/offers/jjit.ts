@@ -77,7 +77,7 @@ export const fetchJJIT = async (
     });
 
     const html = await response.text();
-    console.log('Page content length:', html.length);
+    // console.log('Page content length:', html.length);
 
     const $ = cheerio.load(html);
     const offers: ScrapedOffer[] = [];
@@ -210,7 +210,7 @@ export const fetchJJIT = async (
       .map(parseJobOffer)
       .filter((offer): offer is Offer => offer !== null);
 
-    console.log(parsedOffers);
+    // console.log(parsedOffers);
 
     addedOffersCount = await saveOffers(db, parsedOffers);
     console.log(`Successfully saved ${addedOffersCount} job offers`);
