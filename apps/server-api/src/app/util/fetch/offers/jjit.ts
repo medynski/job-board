@@ -1,6 +1,7 @@
 // import { JustJoinItResponse } from '@job-board/api-interfaces';
 import { Db } from 'mongodb';
 import { Offer, Origin } from '@job-board/api-interfaces';
+import puppeteer from 'puppeteer';
 
 interface JJITOffer {
   title: string;
@@ -18,6 +19,23 @@ interface JJITOffer {
 }
 
 interface RawJJITOffer {
+  title: string;
+  companyName: string;
+  employmentTypes: Array<{
+    from: number;
+    to: number;
+    currency: string;
+  }>;
+  publishedAt: string;
+  requiredSkills: string[];
+  experienceLevel: string;
+  companyLogoThumbUrl: string;
+  workplaceType: string;
+  city: string;
+  remoteInterview: boolean;
+}
+
+interface SourceJJITOffer {
   title: string;
   companyName: string;
   employmentTypes: Array<{
@@ -66,180 +84,243 @@ export const fetchJJIT = async (
   db: Db,
   url: string = 'https://justjoin.it/job-offers/all-locations/javascript?workplace=remote&with-salary=yes'
 ): Promise<number> => {
+  let browser;
   try {
-    console.log('Fetching from URL:', url);
-    const response = await fetch(url, {
-      headers: {
-        Accept: 'text/html',
-        'User-Agent':
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-      },
+    console.log('Launching browser...');
+    browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--disable-gpu',
+        '--window-size=1920x1080',
+      ],
+      executablePath:
+        process.platform === 'darwin'
+          ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+          : undefined,
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    const page = await browser.newPage();
+    await page.setUserAgent(
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+    );
 
-    const html = await response.text();
-    console.log('HTML length:', html.length);
+    // Set viewport to ensure proper rendering
+    await page.setViewport({ width: 1920, height: 32000 });
 
-    // Look for job offer boxes in the HTML that contain data-index
-    const jobListingsPattern =
-      /<div[^>]*data-index="\d+"[^>]*>[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/g;
-    const jobListings = Array.from(html.matchAll(jobListingsPattern));
+    console.log('Navigating to URL:', url);
+    await page.goto(url, {
+      waitUntil: 'networkidle0',
+      timeout: 30000,
+    });
 
-    console.log(`Found ${jobListings.length} potential job listings`);
+    const pageContent = await page.content();
+    console.log('Page content length:', pageContent.length);
 
-    if (jobListings.length === 0) {
-      throw new Error('No job listings found in HTML');
-    }
+    // Wait for the offers to be loaded
+    console.log('Waiting for offers to load...');
+    await page.waitForSelector('[data-index]', { timeout: 30000 });
 
-    const rawOffers: RawJJITOffer[] = [];
+    const { offers: offersData, logs } = await page.evaluate(() => {
+      const offers = [];
+      const logs = [];
+      const offerElements = document.querySelectorAll('div[data-index]');
 
-    for (const listing of jobListings) {
-      const listingHtml = listing[0];
-      try {
-        // Extract title from h3
-        const titleMatch = listingHtml.match(/<h3[^>]*>([^<]*)<\/h3>/);
-        console.log('Title match:', titleMatch?.[1]);
+      logs.push(`Found offer elements: ${offerElements.length}`);
 
-        // Extract skills from skill-tag-n divs, looking for the innermost div that contains the skill name
-        const skillsPattern =
-          /<div class="skill-tag-\d+[^"]*"[^>]*>[\s\S]*?<div[^>]*>[\s\S]*?<div[^>]*>([^<]+)<\/div>/g;
-        const skillsMatches = Array.from(listingHtml.matchAll(skillsPattern));
-        const skills = skillsMatches
-          .map((match) => {
-            const skillName = match[1].trim();
-            console.log('Found skill:', skillName);
-            return skillName;
-          })
-          .filter(
-            (skill) =>
-              skill &&
-              !['Fully remote', 'Hybrid', 'New'].includes(skill) &&
-              skill.length > 0
+      offerElements.forEach((element, index) => {
+        try {
+          logs.push(`Processing offer ${index + 1}`);
+
+          const contentContainer = element;
+          logs.push(
+            'Content container HTML: ' + (contentContainer?.outerHTML || 'null')
           );
-        console.log('All skills found:', skills);
 
-        // Extract company name - look for it near the logo
-        const companyPattern =
-          /<img[^>]*id="offerCardCompanyLogo"[^>]*>[\s\S]*?<span[^>]*>([^<]+)<\/span>/;
-        const companyMatch = listingHtml.match(companyPattern);
-        console.log('Company match:', companyMatch?.[1]);
+          const container = contentContainer.querySelector(
+            'div[class*="MuiBox-root"]'
+          );
 
-        // If no company found, try alternative pattern looking for company name after the logo
-        let altMatch = null;
-        if (!companyMatch) {
-          const altCompanyPattern =
-            /id="offerCardCompanyLogo"[\s\S]*?<span[^>]*>([^<]+)<\/span>/;
-          altMatch = listingHtml.match(altCompanyPattern);
-          if (altMatch) {
-            console.log(
-              'Found company with alternative pattern:',
-              altMatch[1].trim()
+          const parseOffer = (el: Element) => {
+            const title = el.querySelector('h3')?.textContent.trim() || '';
+
+            const company =
+              Array.from(
+                el.querySelectorAll(
+                  'svg[data-testid="ApartmentRoundedIcon"] + span'
+                )
+              ).map((span) => span.textContent.trim())[0] || '';
+
+            const locationIcon = el.querySelector(
+              'svg[data-testid="PlaceOutlinedIcon"]'
             );
+            let location = '';
+            if (locationIcon) {
+              const locationContainer = locationIcon.closest('div');
+              const locSpans = locationContainer.querySelectorAll('span');
+              location = Array.from(locSpans)
+                .map((s) => s.textContent.trim())
+                .filter(Boolean)
+                .join(', ');
+            }
+
+            let salary = '';
+            const salaryContainers = Array.from(
+              el.querySelectorAll('div')
+            ).filter((div) => {
+              const spans = div.querySelectorAll('span');
+              return (
+                spans.length >= 3 &&
+                /^\d[\d\s]*$/.test(spans[0].textContent.trim()) &&
+                /^\d[\d\s]*$/.test(spans[1].textContent.trim()) &&
+                /^[A-Z]+\/\w+$/.test(spans[2].textContent.trim())
+              );
+            });
+
+            if (salaryContainers.length > 0) {
+              const spans = salaryContainers[0].querySelectorAll('span');
+              const min = spans[0].textContent.trim();
+              const max = spans[1].textContent.trim();
+              const currency = spans[2].textContent.trim();
+              salary = `${min} - ${max} ${currency}`;
+            }
+
+            const logoUrl =
+              el.querySelector('#offerCardCompanyLogo')?.getAttribute('src') ||
+              '';
+
+            const skills = Array.from(el.querySelectorAll('div'))
+              .filter(
+                (d) =>
+                  d.childElementCount === 1 &&
+                  d.firstElementChild?.childElementCount === 1
+              )
+              .map((d) =>
+                d.firstElementChild.firstElementChild?.textContent?.trim()
+              )
+              .filter(
+                (text) => text && !/^\d+$/.test(text) && !['New'].includes(text)
+              );
+
+            const href =
+              el.querySelector('a[href]')?.getAttribute('href') || '';
+            const link = href.startsWith('http')
+              ? href
+              : 'https://justjoin.it' + href;
+
+            const parsedOffer = {
+              title,
+              company,
+              location,
+              salary,
+              skills,
+              logoUrl,
+              link,
+            };
+
+            return parsedOffer;
+          };
+
+          const offer = parseOffer(container);
+
+          if (offer.company) {
+            const singleOffer = {
+              title: offer.title,
+              companyName: offer.company,
+              employmentTypes: [offer.salary],
+              publishedAt: new Date().toISOString(),
+              requiredSkills: offer.skills,
+              companyLogoThumbUrl: offer.logoUrl,
+              city: offer.location,
+              offerUrl: offer.link,
+              salary: offer.salary,
+            };
+            logs.push('Single offer: ', singleOffer);
+            offers.push(singleOffer);
+          } else {
+            logs.push('Skipping offer due to missing required fields');
           }
+        } catch (error) {
+          logs.push('Error processing offer element: ' + error);
         }
+      });
 
-        // Extract salary - look for numbers followed by currency
-        const salaryMatch = listingHtml.match(
-          /<span[^>]*>(\d+[\s,]*\d*)<\/span>[\s\S]*?<span[^>]*>(\d+[\s,]*\d*)<\/span>[\s\S]*?<span[^>]*>([^<]*)<\/span>/
-        );
-        const salary = {
-          from: salaryMatch
-            ? parseInt(salaryMatch[1].replace(/[\s,]/g, ''))
-            : 0,
-          to: salaryMatch ? parseInt(salaryMatch[2].replace(/[\s,]/g, '')) : 0,
-          currency: salaryMatch ? salaryMatch[3].replace(/[^A-Z]/g, '') : 'PLN',
+      logs.push('Total offers processed: ' + offers.length);
+      return { offers, logs };
+    });
+
+    // Log all the collected logs
+    logs.forEach((log) => console.log(log));
+
+    if (!offersData || offersData.length === 0) {
+      console.error('No valid offers found after processing');
+      throw new Error('No valid offers found after processing');
+    }
+
+    console.log(`Found ${offersData.length} offers`);
+
+    const rawOffers: RawJJITOffer[] = offersData.map(
+      (offer: SourceJJITOffer) => {
+        console.log('Processing offer:', {
+          title: offer.title,
+          company: offer.companyName,
+          skills: offer.requiredSkills,
+          salary: offer.employmentTypes?.[0],
+        });
+
+        return {
+          title: offer.title,
+          companyName: offer.companyName,
+          employmentTypes: [
+            {
+              from: offer.employmentTypes?.[0]?.from || 0,
+              to: offer.employmentTypes?.[0]?.to || 0,
+              currency: offer.employmentTypes?.[0]?.currency || 'PLN',
+            },
+          ],
+          publishedAt: offer.publishedAt || new Date().toISOString(),
+          requiredSkills: offer.requiredSkills || [],
+          experienceLevel: offer.experienceLevel || '',
+          companyLogoThumbUrl: offer.companyLogoThumbUrl || '',
+          workplaceType: offer.workplaceType || 'office',
+          city: offer.city || '',
+          remoteInterview: offer.remoteInterview || false,
         };
-
-        // Extract logo URL
-        const logoMatch = listingHtml.match(
-          /src="([^"]*)"[^>]*id="offerCardCompanyLogo"/
-        );
-
-        if (titleMatch && (companyMatch || altMatch) && skills.length > 0) {
-          const companyName = (
-            companyMatch ? companyMatch[1] : altMatch[1]
-          ).trim();
-          console.log('Found offer:', {
-            title: titleMatch[1].trim(),
-            company: companyName,
-            skills,
-          });
-
-          rawOffers.push({
-            title: titleMatch[1].trim(),
-            companyName: companyName,
-            employmentTypes: [
-              {
-                from: salary.from,
-                to: salary.to,
-                currency: salary.currency,
-              },
-            ],
-            publishedAt: new Date().toISOString(),
-            requiredSkills: skills,
-            experienceLevel: '',
-            companyLogoThumbUrl: logoMatch ? logoMatch[1] : '',
-            workplaceType: listingHtml.includes('Fully remote')
-              ? 'remote'
-              : 'office',
-            city: '',
-            remoteInterview: listingHtml.includes('Fully remote'),
-          });
-        } else {
-          console.log('Missing required fields in offer:', {
-            hasTitle: !!titleMatch,
-            hasCompany: !!(companyMatch || altMatch),
-            skillsCount: skills.length,
-            rawHtml:
-              listingHtml.length > 150000
-                ? listingHtml.substring(0, 2500) + '...'
-                : listingHtml,
-          });
-        }
-      } catch (e) {
-        console.log('Error processing offer:', e);
       }
-    }
+    );
 
-    if (rawOffers.length === 0) {
-      throw new Error('No valid job offers found');
-    }
-
-    try {
-      console.log(`Processing ${rawOffers.length} job offers`);
-      return processOffers(
-        rawOffers.map(
-          (offer: RawJJITOffer): JJITOffer => ({
-            title: offer.title,
-            company_name: offer.companyName,
-            salary_from: offer.employmentTypes[0]?.from || 0,
-            salary_to: offer.employmentTypes[0]?.to || 0,
-            salary_currency: (
-              offer.employmentTypes[0]?.currency || 'PLN'
-            ).toUpperCase(),
-            published_at: offer.publishedAt,
-            skills:
-              offer.requiredSkills?.map((skill: string) => ({
-                name: skill,
-              })) || [],
-            experience_level: offer.experienceLevel,
-            company_logo_url: offer.companyLogoThumbUrl,
-            workplace_type: offer.workplaceType,
-            city: offer.city,
-            remote_interview: offer.remoteInterview,
-          })
-        )
-      );
-    } catch (e) {
-      console.error('Error parsing job offers:', e);
-      throw new Error('Could not parse job offers data');
-    }
+    return processOffers(
+      rawOffers.map(
+        (offer: RawJJITOffer): JJITOffer => ({
+          title: offer.title,
+          company_name: offer.companyName,
+          salary_from: offer.employmentTypes[0]?.from || 0,
+          salary_to: offer.employmentTypes[0]?.to || 0,
+          salary_currency: (
+            offer.employmentTypes[0]?.currency || 'PLN'
+          ).toUpperCase(),
+          published_at: offer.publishedAt,
+          skills:
+            offer.requiredSkills?.map((skill: string) => ({ name: skill })) ||
+            [],
+          experience_level: offer.experienceLevel,
+          company_logo_url: offer.companyLogoThumbUrl,
+          workplace_type: offer.workplaceType,
+          city: offer.city,
+          remote_interview: offer.remoteInterview,
+        })
+      )
+    );
   } catch (e) {
     console.error('Error fetching data:', e);
     throw e;
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
   }
 };
 
