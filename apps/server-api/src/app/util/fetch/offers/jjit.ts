@@ -213,8 +213,7 @@ export const fetchJJIT = async (
     console.log(parsedOffers);
 
     addedOffersCount = await saveOffers(db, parsedOffers);
-    // console.log(`Successfully saved ${addedOffersCount} job offers`);
-    console.error(`Successfully saved ${addedOffersCount} job offers`);
+    console.log(`Successfully saved ${addedOffersCount} job offers`);
   } catch (e) {
     console.error('Error fetching data:', e);
   }
