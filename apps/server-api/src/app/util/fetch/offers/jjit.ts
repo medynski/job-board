@@ -1,4 +1,3 @@
-// import { JustJoinItResponse } from '@job-board/api-interfaces';
 import { Db } from 'mongodb';
 import { Offer, Origin } from '@job-board/api-interfaces';
 import puppeteer from 'puppeteer';
@@ -16,6 +15,7 @@ interface JJITOffer {
   workplace_type: string;
   city: string;
   remote_interview: boolean;
+  offer_url: string;
 }
 
 interface RawJJITOffer {
@@ -33,6 +33,7 @@ interface RawJJITOffer {
   workplaceType: string;
   city: string;
   remoteInterview: boolean;
+  offerUrl: string;
 }
 
 interface SourceJJITOffer {
@@ -50,6 +51,7 @@ interface SourceJJITOffer {
   workplaceType: string;
   city: string;
   remoteInterview: boolean;
+  offerUrl: string;
 }
 
 const parseJobOffer = (offer: JJITOffer): Offer | null => {
@@ -65,9 +67,7 @@ const parseJobOffer = (offer: JJITOffer): Offer | null => {
         from: offer.salary_from,
         to: offer.salary_to,
       },
-      url: `https://justjoin.it/offers/${offer.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')}`,
+      url: offer.offer_url,
       requiredSkills: offer.skills.map((s) => s.name),
       seniority: [offer.experience_level],
       origin: Origin.JJIT,
@@ -82,7 +82,7 @@ const parseJobOffer = (offer: JJITOffer): Offer | null => {
 
 export const fetchJJIT = async (
   db: Db,
-  url: string = 'https://justjoin.it/job-offers/all-locations/javascript?workplace=remote&with-salary=yes'
+  url: string = process.env.OFFERS_JJIT_URL
 ): Promise<number> => {
   let browser;
   try {
@@ -211,11 +211,29 @@ export const fetchJJIT = async (
               ? href
               : 'https://justjoin.it' + href;
 
+            const parseSalaryString = (salaryStr: string) => {
+              const match = salaryStr.match(
+                /([\d\s]+)\s*-\s*([\d\s]+)\s*([A-Z]{3})/
+              );
+              if (!match) return null;
+
+              const from = parseInt(match[1].replace(/\s/g, ''), 10);
+              const to = parseInt(match[2].replace(/\s/g, ''), 10);
+              const currency = match[3];
+
+              return { from, to, currency };
+            };
+
+            const parsedSalary = parseSalaryString(salary);
             const parsedOffer = {
               title,
               company,
               location,
-              salary,
+              salary: {
+                from: parsedSalary.from,
+                to: parsedSalary.to,
+                currency: parsedSalary.currency,
+              },
               skills,
               logoUrl,
               link,
@@ -264,13 +282,6 @@ export const fetchJJIT = async (
 
     const rawOffers: RawJJITOffer[] = offersData.map(
       (offer: SourceJJITOffer) => {
-        console.log('Processing offer:', {
-          title: offer.title,
-          company: offer.companyName,
-          skills: offer.requiredSkills,
-          salary: offer.employmentTypes?.[0],
-        });
-
         return {
           title: offer.title,
           companyName: offer.companyName,
@@ -288,6 +299,7 @@ export const fetchJJIT = async (
           workplaceType: offer.workplaceType || 'office',
           city: offer.city || '',
           remoteInterview: offer.remoteInterview || false,
+          offerUrl: offer.offerUrl || '',
         };
       }
     );
@@ -311,6 +323,7 @@ export const fetchJJIT = async (
           workplace_type: offer.workplaceType,
           city: offer.city,
           remote_interview: offer.remoteInterview,
+          offer_url: offer.offerUrl,
         })
       )
     );
@@ -324,7 +337,7 @@ export const fetchJJIT = async (
   }
 };
 
-function processOffers(offers: JJITOffer[]): number {
+const processOffers = (offers: JJITOffer[]): number => {
   console.log('Processing offers:', offers.length);
   const parsedOffers = offers
     .map((offer: JJITOffer) => parseJobOffer(offer))
@@ -332,4 +345,4 @@ function processOffers(offers: JJITOffer[]): number {
 
   console.log(`Successfully parsed ${parsedOffers.length} job offers`);
   return parsedOffers.length;
-}
+};
