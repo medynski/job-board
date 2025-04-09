@@ -82,7 +82,7 @@ export const OfferBox: FunctionComponent<{
           {offer.requiredSkills.join(' - ')}
         </div>
 
-        {offer.salaryRange.from && offer.salaryRange.to && (
+        {offer.salaryRange.from !== 0 && offer.salaryRange.to !== 0 && (
           <Tooltip
             title={`${formatCurrency(
               offer.salaryRange.from
